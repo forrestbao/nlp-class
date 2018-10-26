@@ -4,6 +4,9 @@ This respository is for the NLP class offered at Iowa State University from Fall
 
 **Instructor**: Forrest Sheng Bao [fsbao.net](http://fsbao.net) (Hosted at Google. Maybe inaccessible in some parts of the world such as mainland China.)
 
+For reading assignments, check [reading.md](reading.md)
+
+
 ## IPython notebooks 
 * [Tensorflow introduction ](Tensorflow1_hello_world.ipynb)
 * Regular expressions
