@@ -1,0 +1,807 @@
+\documentclass[11pt]{beamer}
+\mode<article> % only for the article version
+{
+  \usepackage{fullpage}
+  \usepackage{hyperref}
+%\usepackage[ps2pdf]{hyperref}
+}
+\usepackage{epsfig}
+\usepackage{fancybox}
+\usefonttheme[onlymath]{serif}
+% \usepackage[utf8]{inputenc}
+
+\mode<presentation>
+{
+%  \setbeamertemplate{background canvas}[vertical shading][bottom=white,top=blue!10]
+%     \usetheme{Warsaw}
+% \usetheme{CambridgeUS}
+%  	\usetheme{Frankfurt}
+%  	\usetheme{Berlin}
+%  	\usetheme{Antibes}
+%   \usetheme{Darmstadt}
+%    \usetheme{Madrid}
+%    \usefonttheme[onlysmall]{structurebold}
+ 	\usecolortheme{orchid}
+% 	\usecolortheme{seahorse}
+  \usecolortheme[named=blue]{structure}
+% 	\usecolortheme{crane}
+%	\usecolortheme{lily}
+}
+
+\setbeamercolor{math text}{fg=green!50!black}
+\setbeamercolor{normal text in math text}{parent=math text}
+
+\usepackage{color}
+\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{beamerthemesplit}
+\usepackage{listings}
+ \lstset{language=Python,
+    basicstyle=\ttfamily\bfseries,
+    commentstyle=\color{red}\itshape,
+  stringstyle=\color{green},
+  showstringspaces=false,
+  keywordstyle=\color{blue}\bfseries,
+  breaklines=true,
+%  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  }
+  
+\usepackage[vlined,algoruled,titlenotnumbered,linesnumbered]{algorithm2e}
+\usepackage{color}
+
+
+%\usepackage{lmodern}
+%\usepackage[T1]{fontenc} 
+
+\usepackage{times}
+
+\setbeamercovered{dynamic}
+
+\title[NLP]{Natural Language Processing}
+\subtitle{Lecture III. Preprocessing \\ -- because not all corpora are just words you can find in Merriam-Webster}
+\author[Forrest Sheng Bao]{Forrest Sheng Bao, Ph.D.}
+\institute[ISU]{Dept. of Computer Science \\ Iowa State University \\ Ames, IA 50011}
+\date[9/7/2021]{Sept. 7, 2021}
+
+\AtBeginSection[] {
+ \begin{frame}[plain]
+   \frametitle{Outline}
+   \tableofcontents[currentsection]
+ \end{frame}
+ \addtocounter{framenumber}{-1}
+}
+
+\AtBeginSubsection[] {
+  \begin{frame}[plain]
+   \frametitle{Outline}
+    \tableofcontents[currentsubsection]
+    \addtocounter{framenumber}{-1}
+  \end{frame}
+} 
+
+\begin{document}
+
+ \frame{\titlepage}
+ 
+ \section<presentation>*{Outline}
+ 
+   \begin{frame}
+     \frametitle{Outline}
+  \tableofcontents
+   \end{frame}
+
+
+% \section{Candidate research projects}
+% 
+% \begin{frame}[allowframebreaks]{Candidate projects}
+%  \begin{itemize}[<+->]
+%   \item [easy] Quantify the amount of logic reasoning in text (need to design an objective measure, e.g., indirectly via review helpfulness)
+%   \item A better word embedding, e.g., 
+% \begin{itemize}
+%  \item distinguishing synonymies and antonyms, with the help of structure, semantic parsing and knowledge. 
+%  \item ``Don't cram two completely different meanings into a single vector! Or should you?'' EACL 2017 keynote by Hinrch Sch\"utze
+%  \item The principle meanings of words, semantics and phonetics radicals, \url{http://www.aclweb.org/anthology/P/P17/P17-1188.pdf}
+%  \item Can we use a finite set of (artificial new) words to express all other words? 
+% \end{itemize}
+%   \framebreak
+%   \item Knowledge engineering stuff 
+%   \begin{itemize}
+%   \item [low-hanging] Knowledge extraction or question answering from reviews, similar to ``SuperAgent: A Customer Service Chatbot for E-commerce Websites'', ACL 2017 by MSRA. \url{http://aclanthology.coli.uni-saarland.de/pdf/P/P17/P17-4017.pdf} With Alibaba and Google. 
+%   \item [bike] How to align human expressible knowledge with knowledge extracted by computers? 
+%   \item [bike] KR for making NLP easier for non-programmers (e.g., in cleaning up the text) 
+%   \item [low-hanging] Word embedding for helping relation extraction 
+%   \item [moonshot] Belief revision on knowledge graph, with non-monotonicity. Do we have to revise the entire knowledge graph when conflicting knowledge comes in? How about an non-monotonic knowledge graph? 
+%   \end{itemize}
+% 
+%  \item Read more at \url{http://www.abigailsee.com/2017/08/30/four-deep-learning-trends-from-acl-2017-part-1.html}
+%  \end{itemize}
+% \end{frame}
+  
+% 
+% \section{Something about graduate school}
+% 
+% \begin{frame}{America has got (real) talents.}
+% 
+% Our society seems to be lost on what talents America has.
+% 
+%  \begin{itemize}
+%   \item Andrew Viterbi (co-founder of QualComm), who gave us Viterbi algorithm so we can do POS tagging. 
+%   \item Guido von Rossum, who gave us the Python programming language, 
+%   \item David Blei, Andrew Ng, and Michael Jordan, who gave us LDA 
+%   \item Tomas Mikolov, Kai Chen, Greg Corrado, and Jeff Dean, who gave us Word2Vec 
+%  \end{itemize}
+%  
+% They make America (and the world) great (no again). 
+% \end{frame}
+%  
+
+% \section{How to write proper code: modularization, Docstring, Git, and Vim}
+% 
+% \begin{frame}{Do not write ugly code in my class}
+% \begin{itemize}
+%  \item \includegraphics[width=\textwidth]{programming_as_an_art.jpg}
+%  \item Readability matters.
+% \end{itemize}
+% \end{frame}
+
+
+
+
+\section{Representation of text data in computers}
+
+\begin{frame}{Not everyone speaks American English or ASCII}
+
+Although in Hollywood movies, aliens all speak English the moment they hit Early (and always in NYC), this is the reality: 
+
+ \includegraphics[width=.6\textwidth]{UTF8_Byte.png}
+\end{frame}
+
+\begin{frame}{Text encoding for plain text}
+ \begin{itemize}[<+->]
+  \item How does computers store text information? 
+%   \item What is information? Data that carries content. 
+  \item Digital computers represent data using a sequence of numbers (e.g., 1s and 0s). 
+  \item Natural languages have basic building blocks: letters, symbols, characters, etc. 
+  \item A piece of text is just a character \emph{string}.
+  \item Use one-to-one mapping between binary sequences and the building blocks, e.g., $1100$ for ``A'', $1001$ for ``B'', etc. 
+  \item ASCII
+  \item Local encodings in Europe and Asia
+  \item UTF8
+  \item Many languages are not yet digitized. Actually many languages still do not have scripts (i.e., writing system). 
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Unicode -- too big to install}
+\centering
+\includegraphics[width=.6\textwidth]{Windows_XP_CJK.jpg}
+
+For CJK, Unicode has 48 strokes (U+31C0..U+31EF), 224 radicals (U+2F00..U+2FDF) and 12 ideogrpahic description characters (U+2FF0..U+2FFF). But it still has each character! 
+
+\begin{columns}[c]
+  \begin{column}{.5\textwidth}
+  \includegraphics[width=1.3\textwidth]{ideographics.pdf}
+%     \begin{itemize}
+%     \item 
+%   \item It has duplicated encodings because the creator literally copied from locale encodings. 
+%    \end{itemize}
+  \end{column}
+\begin{column}{.5\textwidth}
+  \includegraphics[width=\textwidth]{Kangxi_radicals.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Unicode can make NLP throny}
+  \begin{itemize}[<+->]
+    \item Lots of duplicated characters or glyphs, e.g., there is a cross (U+07d9) in Nko, while there many other crosses in Unicode. 
+    \item Invisible characters. 
+    \item Potential adverserial attack by using code in different parts of Unicode.   
+    \item   
+    \begin{itemize}
+      \item Bad‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌ Characters: Imperceptible NLP Attacks, Boucher et al., 2021 \url{https://arxiv.org/pdf/2106.09898.pdf}
+      \item Hey, AI software developers, you are taking Unicode into account, right ... right? \url{https://www.theregister.com/2021/08/06/unicode_ai_bug/}
+    \end{itemize} 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Text encoding in Python3}
+ \begin{itemize}[<+->]
+  \item In Python 3, a string is by default in UTF-8. 
+  \item \url{https://docs.python.org/3/howto/unicode.html}
+  \item There is a separate type for strings, bytes.
+  \item When opening a file, ensure the encoding:
+  \includegraphics[width=\textwidth]{BIG5_encoding.png}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Beyond plain text}
+Some text data are more than \emph{plain text}, including information about formatting and field/structure. 
+ \begin{itemize}
+  \item PDF: font and coordinate for each character -- no strings
+  \item (Encapsulated) Postscript 
+  \item Markup languages: HTML, XML (including Microsoft Office XML). Easier but not that easy: e.g., the same type of information is in different tags or tags of different attributes, e.g., 
+  \begin{verbatim}
+   <a href="a.html" id="first_link">Go back</a>
+   <a href="b.html" id="second_link">Next</a> 
+  \end{verbatim}
+  \item (The evil) Microsoft formats (prior to Office XML)
+  \item Dictionary-like data: YAML, JSON
+ \end{itemize}
+\end{frame}
+
+ 
+\section{Pipeline for NLP Preprocessing}
+\begin{frame}{Pipeline for NLP preprocessing}
+
+You need to have the right data! (Although a lot of research is ``garbage in, garbage out'')
+
+\begin{enumerate}[<+->]
+ \item Download the corpus or Crawl the web or other ways to get the text (e.g., OCR) 
+ \item If the data is (semi-)structured, parse it, e.g., parsing the HTML. 
+ \item Clean up: handling errors (e.g., introduced by OCR or text extraction from Powerpoint slides), and others...
+ \item Tokenization 
+ \item normalization: turn all tokens to their canonical form (including stemming/lemmatization)
+ \item Optionally, you wanna index your text so you can locate them easily later. String search will take very long. 
+\end{enumerate}
+Some text data are more difficult to handle than others, e.g., Twitter vs. NYTimes. 
+\end{frame}
+ 
+\section{Corpus and Crawling}
+
+\begin{frame}[fragile]{Corpus}
+ \begin{itemize}
+  \item The body of text to be processed. This class focuses on English. 
+  \item E.g., all articles on Wikipedia form a corpus. 
+  \item E.g., all news from a newspaper form another corpus. 
+  \item There are many corpora, e.g., 
+  
+{\tiny
+   \begin{verbatim}
+    nltk.corpus.AlignedCorpusReader                         nltk.corpus.PropbankCorpusReader                        nltk.corpus.crubadan                                    nltk.corpus.qc
+nltk.corpus.AlpinoCorpusReader                          nltk.corpus.ProsConsCorpusReader                        nltk.corpus.demo                                        nltk.corpus.re
+nltk.corpus.BNCCorpusReader                             nltk.corpus.RTECorpusReader                             nltk.corpus.dependency_treebank                         nltk.corpus.reader
+nltk.corpus.BracketParseCorpusReader                    nltk.corpus.RegexpTokenizer                             nltk.corpus.find_corpus_fileids                         nltk.corpus.reuters
+nltk.corpus.CHILDESCorpusReader                         nltk.corpus.ReviewsCorpusReader                         nltk.corpus.floresta                                    nltk.corpus.rte
+nltk.corpus.CMUDictCorpusReader                         nltk.corpus.SemcorCorpusReader                          nltk.corpus.framenet                                    nltk.corpus.semcor
+nltk.corpus.CategorizedBracketParseCorpusReader         nltk.corpus.SensevalCorpusReader                        nltk.corpus.framenet15                                  nltk.corpus.senseval
+nltk.corpus.CategorizedCorpusReader                     nltk.corpus.SentiSynset                                 nltk.corpus.gazetteers                                  nltk.corpus.sentence_polarity
+nltk.corpus.CategorizedPlaintextCorpusReader            nltk.corpus.SentiWordNetCorpusReader                    nltk.corpus.genesis                                     nltk.corpus.sentiwordnet
+nltk.corpus.CategorizedSentencesCorpusReader            nltk.corpus.SinicaTreebankCorpusReader                  nltk.corpus.gutenberg                                   nltk.corpus.shakespeare
+nltk.corpus.CategorizedTaggedCorpusReader               nltk.corpus.StringCategoryCorpusReader                  nltk.corpus.ieer                                        nltk.corpus.sinica_treebank
+nltk.corpus.ChasenCorpusReader                          nltk.corpus.SwadeshCorpusReader                         nltk.corpus.inaugural                                   nltk.corpus.state_union
+nltk.corpus.ChunkedCorpusReader                         nltk.corpus.SwitchboardCorpusReader                     nltk.corpus.indian                                      nltk.corpus.stopwords
+nltk.corpus.ComparativeSentencesCorpusReader            nltk.corpus.SyntaxCorpusReader                          nltk.corpus.ipipan                                      nltk.corpus.subjectivity
+nltk.corpus.ConllChunkCorpusReader                      nltk.corpus.TEICorpusView                               nltk.corpus.jeita                                       nltk.corpus.swadesh
+nltk.corpus.ConllCorpusReader                           nltk.corpus.TaggedCorpusReader                          nltk.corpus.knbc                                        nltk.corpus.swadesh110
+nltk.corpus.CorpusReader                                nltk.corpus.TimitCorpusReader                           nltk.corpus.lin_thesaurus                               nltk.corpus.swadesh207
+nltk.corpus.CrubadanCorpusReader                        nltk.corpus.TimitTaggedCorpusReader                     nltk.corpus.mac_morpho                                  nltk.corpus.switchboard
+nltk.corpus.DependencyCorpusReader                      nltk.corpus.ToolboxCorpusReader                         nltk.corpus.machado                                     nltk.corpus.tagged_treebank_para_block_reader
+nltk.corpus.EuroparlCorpusReader                        nltk.corpus.TwitterCorpusReader                         nltk.corpus.masc_tagged                                 nltk.corpus.teardown_module
+nltk.corpus.FramenetCorpusReader                        nltk.corpus.UdhrCorpusReader                            nltk.corpus.movie_reviews                               nltk.corpus.timit
+nltk.corpus.IEERCorpusReader                            nltk.corpus.UnicharsCorpusReader                        nltk.corpus.multext_east                                nltk.corpus.timit_tagged
+nltk.corpus.IPIPANCorpusReader                          nltk.corpus.VerbnetCorpusReader                         nltk.corpus.names                                       nltk.corpus.toolbox
+nltk.corpus.IndianCorpusReader                          nltk.corpus.WordListCorpusReader                        nltk.corpus.nkjp                                        nltk.corpus.treebank
+nltk.corpus.KNBCorpusReader                             nltk.corpus.WordNetCorpusReader                         nltk.corpus.nombank                                     nltk.corpus.treebank_chunk
+nltk.corpus.LazyCorpusLoader                            nltk.corpus.WordNetICCorpusReader                       nltk.corpus.nombank_ptb                                 nltk.corpus.treebank_raw
+nltk.corpus.LinThesaurusCorpusReader                    nltk.corpus.XMLCorpusReader                             nltk.corpus.nonbreaking_prefixes                        nltk.corpus.twitter_samples
+nltk.corpus.MTECorpusReader                             nltk.corpus.YCOECorpusReader                            nltk.corpus.nps_chat                                    nltk.corpus.udhr
+nltk.corpus.MacMorphoCorpusReader                       nltk.corpus.abc                                         nltk.corpus.opinion_lexicon                             nltk.corpus.udhr2
+nltk.corpus.NKJPCorpusReader                            nltk.corpus.alpino                                      nltk.corpus.panlex_lite                                 nltk.corpus.universal_treebanks
+nltk.corpus.NPSChatCorpusReader                         nltk.corpus.brown                                       nltk.corpus.perluniprops                                nltk.corpus.util
+nltk.corpus.NombankCorpusReader                         nltk.corpus.cess_cat                                    nltk.corpus.pl196x                                      nltk.corpus.verbnet
+nltk.corpus.NonbreakingPrefixesCorpusReader             nltk.corpus.cess_esp                                    nltk.corpus.ppattach                                    nltk.corpus.webtext
+nltk.corpus.OpinionLexiconCorpusReader                  nltk.corpus.cmudict                                     nltk.corpus.product_reviews_1                           nltk.corpus.wordnet
+nltk.corpus.PPAttachmentCorpusReader                    nltk.corpus.comparative_sentences                       nltk.corpus.product_reviews_2                           nltk.corpus.wordnet_ic
+nltk.corpus.PanLexLiteCorpusReader                      nltk.corpus.comtrans                                    nltk.corpus.propbank                                    nltk.corpus.words
+nltk.corpus.Pl196xCorpusReader                          nltk.corpus.conll2000                                   nltk.corpus.propbank_ptb                                nltk.corpus.ycoe
+nltk.corpus.PlaintextCorpusReader                       nltk.corpus.conll2002                                   nltk.corpus.pros_cons                                   
+nltk.corpus.PortugueseCategorizedPlaintextCorpusReader  nltk.corpus.conll2007                                   nltk.corpus.ptb         
+   \end{verbatim}
+  }
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Another dataset catalog: Tensorflow datasets}
+  \url{https://www.tensorflow.org/datasets/catalog/overview}
+\end{frame}
+
+\begin{frame}{A corpus ?= a set of sentences }
+ \begin{itemize}
+  \item Building a corpus is not that easy when your input data is not plain-text sentences only. 
+  \item Should you include non-sentence text (table content, headings, external links, etc.) from Wikipedia into the corpus when training word embeddings? 
+  \item What about style information? Should ``\underline{\textit{this}} is not right'' as a line in a movie be treated as ``this is not right''? 
+  \item What about equations in a paper? (Suppose it is in \LaTeX/MathML) 
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{The lack of labeled corpora is limiting NLP research}
+ \begin{itemize}[<+->]
+  \item Having the text alone is not enough for many NLP (research) tasks. 
+  \item NLP tasks are far more complicated and diverse than those in other AI areas, such as CV (where most of the tasks are related to object detection/recognition for which anyone can be a human annotator).
+  \item For example, for years, there is no dataset for using supervised approach to text summarization -- no corpus has sentence-level binary labels. 
+  \item As another example, QA research was a chaos before Stanford SQUAD dataset. 
+  \item Today, lots of research has no common ground truth. People publish papers on their own small-scale datasets, e.g., REALSumm and SummEval have only 100 articles annotated.
+  \item It is also wrong to justify: ``because everyone else used this corpus, so do I.'' (``IBM does this xxx. We don't do this xxx.'' --Steve Jobs)
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Corpora are very diverse}
+ \begin{itemize}[<+->]
+  \item We are in a very open domain. 
+  \item But datasets differ in the way that they are stored (e.g., JSON), organized and shared. 
+  \item Corpora are floating in the homepages of researchers in various ways. 
+  \item Example 1: \url{http://jmcauley.ucsd.edu/data/amazon/}
+  \item Example 2: \url{https://webscope.sandbox.yahoo.com/catalog.php?datatype=l}
+  \item Example 3: \url{https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html\#datasets}
+  \item Example 4: \url{https://catalog.ldc.upenn.edu/ldc2008t19}
+  \item \color{red}{ Lots of subjectivity in annotated data. }
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Crawling data from the Web (Python 2.x)}
+\begin{itemize}
+ \item Often times, the data is not available. So you crawl. (So do Google, Bing, and many others.) 
+ \item In Python, you may use \texttt{urllib2}: 
+ 
+ {\small
+ \begin{lstlisting}
+import urllib2
+response = urllib2.urlopen('http://gozips.uakron.edu/~fbao5/')
+html=response.read()
+ \end{lstlisting}
+}
+\item What if the webpage is dynamic? With the help of another library \texttt{urllib}. Example below for POST method. 
+\begin{lstlisting}
+import urllib
+url="http://10.24.47.178/search.py"
+values = {"single":"landing"}
+data=urllib.urlencode(values)
+response=urllib2.urlopen(urllib2.Request(url, data))
+html=response.read()
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Make your crawler automatically cool down}
+An example for using \texttt{sysvinit} back in 2015, placed under \texttt{/etc/init}. Recent Linux distros use \texttt{systemd}. 
+\begin{block}{}
+{\tiny
+\begin{verbatim}
+description     "Airbnb review fetcher"
+
+setuid forrest
+setgid forrest
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on runlevel [016]
+
+respawn
+respawn limit 10 5
+limit nofile 500000 500000
+
+env LANG=en_US.UTF-8
+env LC_CTYPE=en_US.UTF-8
+
+script
+  exec /home/forrest/Apps/airbnb/bin/python\ 
+  /home/forrest/Apps/airbnb-reviews/tools/app 2>&1 >> \
+  /home/forrest/airbnb_review_fetcher.log
+end script
+\end{verbatim}
+}
+\end{block}
+
+Thanks for Wu Jiang, head of robotics research at Boxed Labs. 
+\end{frame}
+
+
+\begin{frame}{Parse HTML}
+See iPython notebook notes. 
+\end{frame}
+
+\begin{frame}{Index your document (if applicable)}
+ \begin{itemize}
+  \item To allow easy localization of string in documents, you wanna build an inversed index. 
+  \item The very basic searching or information retrieval. 
+  \item See a different iPython notebook notes. 
+ \end{itemize}
+\end{frame}
+
+\section{Clean up the text}
+
+\begin{frame}[fragile]{Why data clean up is needed}
+Run the code below and compare the sample text from three summarization datasets. 
+\scriptsize 
+\begin{verbatim}
+import tensorflow_datasets as tfds 
+
+for piece in tfds.load("cnn_dailymail",split="test"): 
+    print (piece['article']) 
+    break 
+
+for piece in tfds.load("billsum",split="test"): 
+    print (piece['text']) 
+    break 
+
+for piece in tfds.load("big_patent",split="test"): 
+    print (piece['description']) 
+    break
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Clean up the text is not that easy}
+ \begin{itemize}
+  \item \texttt{``we are happy''.split()} 
+  \item The ambiguity of non-alphanumeric symbols, e.g., the dash in ``low-hanging fruit'' vs. ``ex-\\press'', or the spaces between ``New York City'' (``New York'' + ``City'' or ``New'' + ``York'' + ``City''?)
+  \item You cannot change all words to lowercase, e.g., ``It's a CAT 4 hurricane.'' Kitty or category? 
+  \item Numbers make things complicated, e.g., CO2. 
+  \item Some words shouldn't be separated, e.g., in vitro, de facto, et al. 
+  \item A common practice is dropping all non-alphabets -- but it won't work for technical or scientific documents. 
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Help the downstream tasks}
+ \begin{itemize}[<+->]
+  \item Suppose you are processing a post from StackOverflow: 
+  
+``Apply \texttt{get} onto the method \texttt{cat}.'' 
+
+ \item Downstream tasks like POS tagging may fail on ``get'' and ``cat''. 
+ 
+ \item Some string substitution is needed. 
+ \end{itemize}
+\end{frame}
+
+
+\section{Word and sentence tokenization}
+
+\begin{frame}[fragile]{Word Tokenization}
+\begin{itemize}[<+->]
+%  \item We are computer scientists. But we need to leverage some resources that linguistics provide to us: dictionary, grammar, etc. 
+ \item Carrying an concrete meaning, a token is the basic element to construct a sentence -- at least linguistics say so. 
+ \item Things are not as easy as 
+ \begin{lstlisting}
+  "This is a class about NLP".split()
+ \end{lstlisting}
+ \item What are acceptable tokens?
+ \begin{itemize}
+  \item Should contractions like ``n't'' in ``he isn't happy'' be split? 
+  \item  ``We see 2 people in the park after 3pm'' Should we reject all digits? Are ``2'' and ``3'' semantically connected here? 
+  \item Shall we break ``New York''? 
+ \end{itemize}
+ \item Some tokenization is fairly simple. \url{https://web.archive.org/web/19970614072242if_/http://www.cis.upenn.edu:80/~treebank/tokenization.html}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Regular expression}
+\begin{itemize}[<+->]
+ \item A regular expression defines how to generate a string by drawing characters from alphabets. You can draw characters from different sets at different ``steps'', like the example $(abc)*(123)?$ below. 
+ \item $(a)*$ means \{ $\epsilon$, a, aa, aaa, aaaa, ... \}, where $\epsilon$ is the empty string. 
+ \item $(ab)*$ means \{ $\epsilon$, ab, abab, ababab, abababab, ... \}
+ \item $(a|b)*$ means \{ $\epsilon$, a, b, ab, ba, aaa, aab, abb, bbb, bba, baa,  bab, ... \} where $|$ means ``or''. 
+ \item $(a)+$ means \{ a, aa, aaa, \} because + means repeating at least once. 
+ \item $(ab)?$ means \{ ab, $\epsilon$\} because ? means once or none. 
+ \item $(abc)*(123)?$ means \{$\epsilon$, abc, abc123, abcabc, abcabc123, ... \} any string that begins with the string ``abc'' and ends with or without the string ``123''. 
+ \item $0|(1|2|3|4|5|6|7|8|9)(0|1|2|3|4|5|6|7|8|9)+$ means any natural number in common writing format. Note that it does not allow an integer to start with 0. 
+\end{itemize} 
+\end{frame}
+
+\begin{frame}{Use regular expressions}
+\begin{itemize}
+ \item  See iPython notebook notes: the syntax of regex for most UNIX-like OSes and C-style languages may be different from the syntax we just saw but the principles are the same. 
+ \item Do not tokenize stupidly.
+ 
+ \includegraphics[width=.9\textwidth]{ebay_connector.png}
+ \item You may need to craft your own tokenizer. \url{https://stackoverflow.com/questions/15929233/writing-a-tokenizer-in-python}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Regexp-based feature engineering}
+ \url{https://github.com/forrestbao/autoscholar/commit/b732ae5fa14d65558cd0eff7a7a9e103ea7cd937}
+\end{frame}
+
+\begin{frame}{Get our hands dirty!}
+  \begin{itemize}
+    \item NLTK: Natural Language Toolkit, classical NLP toolkit in Python
+    \item SpaCy: Modern, fancy, claimed to be industry-level, friendly APIs, leveraging GPUs (not for all tasks)
+    \item Stanza: from Stanford NLP group, derived from Core (also model-based), native in Python, models trained in PyTorch, leveraging GPU
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]{Tokenization and Sentence segmentation in NLTK}
+
+  Using default ones: 
+
+ \begin{verbatim}
+In [1]: import nltk 
+
+In [2]: nltk.tokenize.word_tokenize \ 
+...: ("I am happy. mr. Wang is happy")
+Out[2]: ['I', 'am', 'happy', '.', 'mr.', 'Wang', 'is', 
+         'happy']
+
+In [3]: nltk.tokenize.sent_tokenize \
+   ...:  ("I am happy. mr. Wang is happy")
+Out[3]: ['I am happy.', 'mr. Wang is also happy']
+
+In [4]: nltk.tokenize.sent_tokenize \
+   ...:  ("I am happy, mr. wang is happy")
+Out[4]: ['I am happy, mr. wang is also happy']
+ \end{verbatim}
+
+As you can see, sentence segmentation heavily depends on puncuations. The default sentencizer in NLTK is Punkt. 
+
+Many other varieties at \url{https://www.nltk.org/api/nltk.tokenize.html}
+\end{frame}
+
+\begin{frame}[fragile]{Tokenization and sentence segmentation in Spacy}
+Pipeline-based NLP. \url{https://spacy.io/usage/spacy-101#pipelines}
+
+  \tiny
+  \begin{verbatim}
+In [32]: nlp=spacy.load("en_core_web_sm", \
+    ...: exclude=["tok2vec",'tagger','parser','ner', 'attribute_ruler', 'lemmatizer'])
+    ...: nlp.add_pipe"sentencizer")        
+Out[32]: <spacy.pipeline.sentencizer.Sentencizer at 0x7f487e80fdc0>
+
+In [33]: [[sent.text for sent in doc.sents ]\
+    ...:             for doc in nlp.pipe(\ 
+    ...: ['today is monday. it is the first day.', 'soup is yammy. pizza sucks.'])]
+Out[33]:
+         [['today is monday.', 'it is the first day.'], 
+          ['soup is yammy.', 'pizza sucks.']]
+
+In [34]: [[word.text for word in doc ]
+    ...:             for doc in nlp.pipe(\ 
+    ...: ['today is monday. it is the first day.', 'soup is yammy. pizza sucks.'])]
+Out[34]: [['today', 'is', 'monday', '.', 'it', 'is', 'the', 'first', 'day', '.'], 
+          ['soup', 'is', 'yammy', '.', 'pizza', 'sucks', '.']]
+  \end{verbatim} 
+\end{frame}
+
+\begin{frame}[fragile]{In Stanza (model-based, slower)}
+Like SpaCy, Stanza is also pipelined. But it takes one string rather than a collection of strings as  the input. 
+
+\tiny
+\begin{verbatim}
+In [1]: import stanza
+
+In [2]: nlp = stanza.Pipeline(lang='en', processors='tokenize')
+2021-08-26 14:15:27 INFO: Loading these models for language: en (English):
+=======================
+| Processor | Package |
+-----------------------
+| tokenize  | ewt     |
+=======================
+
+In [7]: sentences = 'i am very very happy. the weather is very good.'
+
+In [8]: [[token.text for token in sentence.tokens] for sentence in nlp(sentences).sentences]
+Out[8]: 
+ [['i', 'am', 'very', 'very', 'happy', '.'],
+  ['the', 'weather', 'is', 'very', 'good', '.']]
+
+In [9]: [sentence.text for sentence in nlp(sentences).sentences]
+Out[9]: ['i am very very happy.', 'the weather is very good.']
+    
+\end{verbatim}  
+\end{frame}
+
+\begin{frame}{Other tokenizers}
+  \begin{itemize}
+    \item WordPiece, used in BERT, supports subword 
+    \item SentPiece, used in XLnet, 
+  \end{itemize}
+  
+\end{frame}
+
+\section{Stemming and Lemmatization}
+
+\begin{frame}{Stemming and lemmatization}
+ \begin{itemize}[<+->]
+  \item The English language has inflexions, \textit{inflectional morphology}. We modify words for different grammatical purposes. ``I give him a book'' vs. ``He gave me a book.'' 
+  \item A language of very little inflexion is called an \textit{analytic language} or an \textit{isolating language}. 
+  \item Most mainland southeast Asian and Oceanic languages (Chinese, Vietnamese, Thai, etc.) are isolating language. 
+%   \item That's why racists say ``your English is so good''. But seriously, adding suffixes is a simple but dumb solution, like static typing programming languages. Semantic parsing is the king.
+  \item Nevertheless, English is almost the most isolating language among \textit{synthetic languages}, such as High German or Scottish Gaelic. 
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{The English language is a very messed-up one.}
+ \includegraphics[width=\textwidth]{old_English_to_modern_English.png}
+ 
+ ``English irregular verbs'' are actually ``regular verbs'' in Germanic languages. 
+ 
+ \includegraphics[width=.8\textwidth]{Origins_of_English_PieChart.png}
+\end{frame}
+
+
+\begin{frame}{Stemming and lemmatization}
+\begin{itemize}[<+->]
+ \item For many tasks, we want the words ``dog'' and ``dogs'' to be considered the same. 
+ \item Stemming: get the stem, e.g., removing the affix. 
+ \item Stemming may not be enough:
+ \begin{itemize}
+  \item ``I saw you'' should become ``I see you''
+%  \item But, ``I saw the table into half'' should remain the same. 
+ \end{itemize}
+ \item Lemmatization: get the lemma, the item word in a dictionary. 
+ 
+ \hskip -2em  \includegraphics[width=.8\textwidth]{google_define_seek.png}
+ 
+ \item How to build a lemmatizer? 
+ \begin{itemize}
+  \item Take advantage of the dictionary 
+  
+
+  
+  \item What about words beyond? E.g., ``transformative'' (NSF style) vs ``transforming'' (a real English word in dictionaries.)
+ \end{itemize}
+ \item Don't take things for granted: NLTK's ``The WordNet lemmatizer only removes affixes if the resulting word is in its dictionary.'' which means that ``lying'' will not be restored back to ``lie'' by it. 
+\end{itemize} 
+\end{frame}
+
+\begin{frame}{Downside of stemming and lemmatization}
+ \begin{itemize}
+  \item By converting, e.g.,``are'', ``is'', ``am'' and ``be'' into ``be'', we lose information that may help use on other tasks. 
+  \item Some combinations are meaningless when tokenized or lemmatized, e.g., in ``I should have quited grad school when Sequoia gave me \$2M'', ``should have quited'' together mean something.  
+  \item Accurate lemmatization requires understanding the role of each word, e.g., the ``saw'' in ``I saw the table (into half)'' should be kept instead of being changed to ``see.'' 
+ \end{itemize}
+\end{frame}
+
+\section{Normalization and spell correction}
+
+\begin{frame}{Normalization} 
+\begin{itemize}[<+->]
+ \item Normalization means restoring a word to its canonical form, e.g., ``saw'' to ``see''. 
+ \item Stemming and lemmatization are just one side of normalization. 
+ \item Other common tasks of normalization:
+ \begin{itemize}
+  \item Removing \textit{stop words}, words that are too frequency to become background noise, e.g., ``the'', ``of'', etc. 
+  \item Preserving entities, e.g., ``New York''. 
+  \item Expanding abbreviations, e.g., ``PhD'' as ``Piled Higher and Deeper'' not ``Philosophiae Doctor''. 
+  \item Changing characters into lowercase. Not for all! 
+  \item Question: Do you wanna treat ``lower case'' and ``lowercase'' the same? How about ``E-mail'' and ``email''? 
+ \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{PDF is not a mark-up language} 
+~
+\includegraphics[width=.85\textwidth]{sample_PDF.png}
+~
+
+{\tiny Increasing demands for petroleum have stimulated sustainable ways to produce chemicals and  biofuels. Speci?cally, fatty acids of varying chain lengths (C6每C16) naturally synthesized in many organisms are promising starting points for the catalytic production of industrial chemicals and diesel- like biofuels. However, bio-production of fatty acids from plants and other microbial production hosts relies heavily on manipulating tightly regulated fatty acid biosynthetic pathways. In addition,  precursors for fatty acids are used along other central metabolic pathways for the production of amino acids and biomass, which further complicates the engineering of microbial hosts for higher yields. Here, we demonstrate an iterative metabolic engineering effort that integrates computationally driven predictions and metabolic ?ux analysis techniques to meet this challenge. The OptForce procedure was used for suggesting and prioritizing genetic manipulations that overproduce fatty acids of different  chain lengths from C6 to C16 starting with wild-type E. coli. We identi?ed some common but mostly chain-speci?c genetic interventions alluding to the possibility of ?ne-tuning overproduction for speci?c fatty acid chain lengths. In accordance with the OptForce prioritization of interventions, fabZ and acyl- ACP thioesterase were upregulated and fadD was deleted to arrive at a strain that produces 1.70 g/L and 0.14 g fatty acid/g glucose (~ 39\% maximum theoretical yield) of C14每16 fatty acids in minimal M9 medium. These results highlight the bene?t of using computational strain design and ?ux analysis tools in the design of recombinant strains of E.  coli  to produce free fatty   acids.}
+\end{frame}
+
+\begin{frame}{Tackling spelling errors or OCR errors}
+ \begin{itemize}[<+->]
+  \item How to build a spell checker? \url{http://norvig.com/spell-correct.html}
+  \item Using a dictionary, computing editing distance, and ranking candidates. 
+  \item Peter's solution assumes at most 2 edits from original string. 
+  \item String alignment: Smith-waterman algorithm, etc. 
+  \item What else? 
+  \item Do not think at token level. 
+  \item Language model to be discussed. How to train the model? 
+  \item What about symbols used in technical documents? E.g., ``10g/mL''. 
+ \end{itemize}
+\end{frame}
+
+\section{Building an inverse index}
+
+\begin{frame}[fragile,shrink]{Building an inverse index}
+\begin{itemize}[<+->]
+ \item An inverse index allows us to quickly locate a string (all occurrences or just one) in the corpus. 
+ \item Suppose I am building a file scanner for all files on my computer in \texttt{whoosh}.
+ \item Begin with creating a schema, the structure of the index.
+ {\scriptsize
+ \begin{lstlisting}
+import whoosh, whoosh.fields, whoosh.analysis
+schema = whoosh.fields.Schema(\
+  path=whoosh.fields.ID(stored=True),\
+  body=whoosh.fields.TEXT(\
+       analyzer=whoosh.analysis.StemmingAnalyzer(),
+       stored=True),\
+  page=whoosh.fields.NUMERIC(int, 64, signed=False, stored=True))
+ \end{lstlisting}
+ }
+\item You may imagine the schema as the headers of a table. 
+\item This index contains 3 fields, path, body and page, which are ID (``the entire value of the field as a single unit (that is, it doesn’t break it up into individual words).''), text and numeric, respectively. 
+
+\item ``A field can be indexed (meaning it can be searched) and/or stored (meaning the value that gets indexed is returned with the results'' 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building an inverse index}
+\begin{itemize}[<+->]
+ \item Then you create an index object.  
+ {\scriptsize
+ \begin{lstlisting}
+  ix = whoosh.index.create_in("/home/forrest/index_dir", schema) 
+  writer = ix.writer()
+ \end{lstlisting}
+}
+ \item The index will be saved in the directory. 
+ \item Then you add documents ({\color{red}{not necessarily a real file but a piece of text}}) into it. Just like filling rows in a table. 
+ 
+ {\scriptsize
+ \begin{lstlisting}
+ writer.add_document(path=unicode("/mylife/preschool.log"), body=unicode("I was born"), page=1)
+ writer.add_document(path=unicode("/mylife/preschool.log"), body=unicode("I went to school"), page=2)
+ \end{lstlisting}
+}
+ \item Always remember to commit after you are done with adding documents each time. 
+ {\scriptsize
+ \begin{lstlisting}
+ writer.commit() 
+ \end{lstlisting}
+}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building an inverse index}
+\begin{itemize}[<+->]
+ \item Now, let's search by creating a query. 
+ {\scriptsize
+ \begin{lstlisting}
+import whoosh.qparser
+qp = whoosh.qparser.QueryParser("body", schema = ix.schema) # the query is on body field
+q = qp.parse(u"born")      # the query value is "born"
+ \end{lstlisting}
+}
+ \item then pass the query to a searcher
+ {\scriptsize
+ \begin{lstlisting}
+searcher = ix.searcher()
+results = searcher.search(q)
+ \end{lstlisting}
+}
+ \item Here is the results:
+ {\scriptsize
+ \begin{lstlisting}
+  for result in results: # each result is for one document which could contain multiple matches 
+        print "found match(es) in file %s".format(result["path"])
+ \end{lstlisting}
+}
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Cloud APIs for syntactic analysis}
+\begin{itemize}
+ \item Google: \url{https://cloud.google.com/natural-language/}
+ \item Microsoft: \url{https://azure.microsoft.com/en-us/services/cognitive-services/text-analytics/}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Other libraries}
+ \begin{itemize}
+  \item TextBlob: built on top of NLTK
+  \item SpaCy: much faster than NLTK
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Homework  3}
+\begin{itemize}
+ \item Write a Python program that passes a query (which may contain non-alphabetnumerics) to Google using GET method and extract the first sentence of each sample result on the first page. In the example below, you should extract ``academia is broken'',  ``academia is isolating and fundamentally sick'', and others. 
+ 
+ \includegraphics[width=.5\textwidth]{google_academia.png}
+\end{itemize}
+ 
+\end{frame}
+
+% Sentence tokenization
+% POS tag
+% n-gram 
+% 
+
+\end{document}

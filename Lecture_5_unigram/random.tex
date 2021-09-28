@@ -1,0 +1,14 @@
+\documentclass[tikz, border=5]{standalone}
+\begin{document}
+% \tikz
+%    \draw [blue!50!cyan, ultra thick] 
+%      plot [smooth cycle, tension=1, domain=0:320, samples=180] (\x:{2+rand/1});
+
+\begin{tikzpicture}[x=16mm,
+       every edge/.style = {draw, Straight Barb-Straight Barb},
+every edge quotes/.style = {fill=white,font=\footnotesize}
+                    ]
+\draw[very thick,red, smooth,domain=9:101, samples=180] plot (\x/10,rand/2);
+
+    \end{tikzpicture}
+\end{document}
