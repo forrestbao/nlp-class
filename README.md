@@ -2,9 +2,11 @@
 
 This respository is for the NLP class offered at Iowa State University from Fall 2017 to Fall 2021. 
 
-**Instructor**: Forrest Sheng Bao [fsbao.net](http://fsbao.net)
+**Instructor**: Prof. Dr. Forrest Sheng Bao [fsbao.net](http://fsbao.net)
 
-Slides can be found in the folders for each lecture unit. Default file name is `EE.pdf`. 
+Slides can be found in the folders for each lecture unit. Default file name is `EE.pdf`.
+
+Slides for Machine Learning can be found in [Bao's ML class repository](https://github.com/forrestbao/MLClass). Note that the information about perceptron algorithm is under the SVM unit. 
 
 For reading assignments, check [reading.md](reading.md)
 
