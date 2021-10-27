@@ -16,5 +16,7 @@ For reading assignments, check [reading.md](reading.md)
 * [Tensorflow introduction ](Tensorflow1_hello_world.ipynb)
 * [Regular expressions](Lecture_3_preoprocessing/Lecture_3_preprocessing_regular_expression.ipynb)
 * [Web crawling and indexing](Lecture_3_preoprocessing/Lecture_3_HTML_parsing.ipynb)
+* [LSTMsin Tensorflow](https://colab.research.google.com/drive/1wl-5uofsShYJic0KQ5zapku_l8dHeJR2?usp=sharing)
+* [Embedding layers in Tensorflow](https://colab.research.google.com/drive/15repLULKxghG5FYIeBbxoL-47JyGoRXI)
 
 Opinions expressed in this repository do not reflect those of Iowa State University. 
