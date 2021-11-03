@@ -1,0 +1,442 @@
+\documentclass[11pt,handout]{beamer}
+\mode<article> % only for the article version
+{
+  \usepackage{fullpage}
+  \usepackage{hyperref}
+%\usepackage[ps2pdf]{hyperref}
+}
+\usepackage{epsfig}
+\usepackage{fancybox}
+\usefonttheme[onlymath]{serif}
+
+\mode<presentation>
+{
+%  \setbeamertemplate{background canvas}[vertical shading][bottom=white,top=blue!10]
+%     \usetheme{Warsaw}
+% \usetheme{CambridgeUS}
+%  	\usetheme{Frankfurt}
+%  	\usetheme{Berlin}
+%  	\usetheme{Antibes}
+%   \usetheme{Darmstadt}
+%    \usetheme{Madrid}
+%    \usefonttheme[onlysmall]{structurebold}
+ 	\usecolortheme{orchid}
+% 	\usecolortheme{seahorse}
+  \usecolortheme[named=blue]{structure}
+% 	\usecolortheme{crane}
+%	\usecolortheme{lily}
+}
+
+\setbeamercolor{math text}{fg=green!50!black}
+\setbeamercolor{normal text in math text}{parent=math text}
+
+\usepackage{color}
+\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts}
+%\usepackage{beamerthemesplit}
+\usepackage{listings}
+ \lstset{language=Python,
+    basicstyle=\ttfamily\bfseries,
+    commentstyle=\color{red}\itshape,
+  stringstyle=\color{green},
+  showstringspaces=false,
+  keywordstyle=\color{blue}\bfseries,
+  breaklines=true,
+%  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  }
+\newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+\DeclareMathOperator*{\argmax}{argmax}
+  
+  
+\usepackage[vlined,algoruled,titlenotnumbered,linesnumbered]{algorithm2e}
+\usepackage{algorithmic}
+\usepackage{color}
+\newcommand{\argmaxF}{\mathop{\mathrm{argmax}}\limits}
+
+\setlength{\leftmargini}{0pt}
+
+\usepackage{times}
+
+\setbeamercovered{dynamic}
+
+\title[NLP]{Natural Language Processing}
+\subtitle{Lecture VII. Word Embedding -- a 30-year journey}
+\author[Forrest Sheng Bao]{Forrest Sheng Bao, Ph.D.}
+\institute[ISU]{Dept. of Computer Science \\ Iowa State University \\ Ames, IA 50011}
+\date{\today}
+
+\AtBeginSection[] {
+ \begin{frame}[plain]
+   \frametitle{Outline}
+   \tableofcontents[currentsection]
+ \end{frame}
+ \addtocounter{framenumber}{-1}
+}
+
+\AtBeginSubsection[] {
+  \begin{frame}[plain]
+   \frametitle{Outline}
+    \tableofcontents[currentsubsection]
+    \addtocounter{framenumber}{-1}
+  \end{frame}
+} 
+
+\begin{document}
+
+ \frame{\titlepage}
+ 
+ \section<presentation>*{Outline}
+ 
+%    \begin{frame}
+%      \frametitle{Outline}
+%   \tableofcontents
+%    \end{frame}
+
+\begin{frame}{Something about graduate school}
+
+``The path to real success is not to compete, but to invent a new game, and then master it.'' Reid Hoffman, {\tiny \url{https://www.linkedin.com/pulse/dont-just-compete-invent-new-game-master-reid-hoffman}}
+
+Salute to the NLP pioneers, including but not limited to:  
+Elman (1990), Bengio (2003), Collobert \& Weston (2008, look-up table), Mnih \& Hinton (2007 \& 2009, tree). 
+ 
+\end{frame}
+
+
+\begin{frame}{Language model review}
+ \begin{itemize}[<+->]
+  \item BOW or unigram: no order of words
+  \item N-gram where $N>1$: a sequence of words, some structural information. 
+  \item A classical language model estimates a cost function (e.g., likelihood) of word sequences. 
+  \item Problem? 
+  \begin{itemize}
+   \item ``curse of dimensionality'' %,  e.g., $N$ unigrams, $N^2$ bigrams, $N^3$ trigrams, etc.)
+   $P(w_1, \dots, w_n) = P(w_2|w_1) \times P(w_3|w_1, w_2)\times \dots \times P(w_n|w_1, \dots, w_{n-1})  = \prod\limits_{i=2}^{n}P(w_i|w_1, \dots,w_{i-1}) \approx \prod\limits_{i=2}^{n}P(w_i|w_{i-\tau-1}, \dots,w_{i-1}) $   Too many probablities! 
+   \item What about unseen combinations (not just words)? Smoothing is not enough.
+   \item How to plug into neural networks?  
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{How to plug words into an ANN}
+ \begin{itemize}[<+->]
+  \item A very good explanation from TF v1 tutorial about why word needs to be vectorized.
+  \url{https://github.com/tensorflow/docs/blob/r1.15/site/en/tutorials/representation/word2vec.md}
+  \item How do we send sequences of words into an NN? 
+  \item Using ASCII code? Using UTF code? 
+  \item Turning words into vectors (the simple ways):
+  \begin{itemize}
+   \item one-hot encoder (Finding Structure in Time, Elman, 1990, Table 5, each word is a 31-bit vector)
+   \item co-occurrence matrix (e.g., P(``fox'', ``jump''), P(``lazy'', ``dog''))
+   \item factorization on the co-occurrence matrix (to reduce dimensionality) such as SVD
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Word representation}
+\begin{itemize}
+ \item ``A word representation is a mathematical object
+         associated with each word, often a vector.'' [1]
+ \item ``Each dimension's value corresponds to a feature and
+         might even have a semantic or grammatical
+         interpretation, so we call it a word feature.''
+ \item One-hot (aka 1-of-N) encoding is one, but obviously not good. 
+ \item Word embedding: a distributed representation 
+\end{itemize}
+Ref [1]: Turian, Ratinov, and Bengio, Word representations:
+A simple and general method for semi-supervised learning, ACL 2010
+\end{frame}
+
+\begin{frame}{Embedding via Factorization}
+\begin{itemize}[<+->]
+  \item Intuition: Semantically (dis)similar/(un)related words should co-occur in documents (in)frequently.
+  \item A word-document co-occurence matrix can be considered as a composition 
+   of a series of transforms. 
+       \begin{enumerate}
+         \item Each word is a distribution over given semantic dimensions, e.g., ``water'' covers ``liquid'', ``clear'', and ``oderless''.
+         \item A document is generated by sampling words in different semantic dimensions, thus transform the word probabilities to their distributions in documents. 
+         \item Some semantic dimensions are more important. 
+       \end{enumerate}
+  \item This is the idea behind Singular Vector Decomposition (SVD): $M = U\Sigma V$, where all rows of $U$ or all columns of $V$ are orthorgonal, and $\Sigma$ a diagnoal matrix of signular values (importances of semantic dimensions). 
+  \item The dimension of $U$ is high. Usually we zero out some dimensions in $\Sigma$ to focus on only the important ones. And thus, the resulting $U$ is no longer orthornormal. 
+  \item SVD on word-document co-occurence [2].  Note that the SVD in this tutorial is called compact SVD. 
+
+  \item The co-occurence counts can be further weighted into other quantities, such as point-wise mutual information (Slide 37 of [2]). 
+\end{itemize}
+
+Refs: 
+\begin{enumerate}
+\item \url{https://cnbc.cmu.edu/~plaut/papers/pdf/RohdeGonnermanPlautSUB-CogSci.COALS.pdf}
+\item  \url{https://cla2019.github.io/embedmatrix.pdf}
+\end{enumerate}
+\end{frame}
+   
+
+\begin{frame}{Problems of factorization-based embedding}
+\begin{itemize}[<+->]
+  \item You have to re-create the co-occurence matrix when updating or fine-tuing. 
+  \item A large sparse matrix. 
+  \item Starting from scratch in computing SVD each time. Cannot reuse previous results, i.e., fine-tuning. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{History}
+\begin{itemize}[<+->]
+   \item ``A Neural Probabilistic Language Model'', Bengio et al, JMLR, 2003
+   \item ``Three New Graphical Models for Statistical Language Modelling'', Mnih \& Hinton, ICML 2007
+   \item ``A Unified Architecture for Natural Language Processing:
+Deep Neural Networks with Multitask Learning'', Collobert and Weston, ICML 2008
+   \item ``Neural network based language models for higly inflective languages'', Mikolov et al., ICASSP 2009,  separating the training of embeddings and that of the LM/task NN. 
+   \item Finally, Word2vec, ``Distributed Representations of Words and Phrases and their Compositionality'', Mikolov et al., NIPS 2013
+   \item And, ``GloVe: Global Vectors for Word Representation'', Pennnington et al., EMNLP 2014 
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}{First neural language model}
+\begin{itemize}[<+->]
+ \item Bengio et al., NIPS 2003, A neural probablistic language model 
+ \item Joint probability as a function of words:  $P(\underbrace{w_i}_{target}|\underbrace{w_{i-\tau-1}, \dots,w_{i-1}}_{context}) = f(\underbrace{w_i}_{target}, \underbrace{w_{i-\tau-1}, \dots, w_{i-1}}_{context})$
+in 2 steps: 
+\begin{enumerate}
+ \item each word $w_{j\in[i-\tau-1..i]}$ into a vector $C(w_j)\in \mathbb{R}^D$ thru a look-up table $C$, which is also a function, and 
+ \item a function $g(\underbrace{C(w_x)}_{\text{any word }w_x,}, \underbrace{C(w_{i-\tau-1}), \dots, C(w_{i-1})}_{\text{given the same  context}})$ such that $w_i = \argmax\limits_x g$, % .  In other words, $g| _{w_x = w_i} > g|_{w_x\not = w_i, \forall w_x \in {\mathcal{V}}}$ , 
+ e.g., 
+ {\tiny 
+  $$
+ \begin{array}{lcr}
+   g(``dog''|\text{``a brown fox jumps over a lazy''}) & > & g(``penguin''|\text{``a brown fox jumps over a lazy''}) \\
+   g(``dog''|\text{``a brown fox jumps over a lazy''}) & > & g(``wheel''|\text{``a brown fox jumps over a lazy''}) \\
+   g(``dog''|\text{``a brown fox jumps over a lazy''}) & > & g(``homework''|\text{``a brown fox jumps over a lazy''}) \\
+   g(``dog''|\text{``a brown fox jumps over a lazy''}) & > & g(``salary''|\text{``a brown fox jumps over a lazy''}) \\
+   g(``dog''|\text{``a brown fox jumps over a lazy''}) & > & \dots g \text{ on any constructed  fake/negative examples} \dots 
+ \end{array}
+ $$
+ }
+%  $g(``dog''|``a brown fox jumps over a lazy'') > g(``penguin''|``a brown fox jumps over a lazy'')$, $g(``dog''|``a brown fox jumps over a lazy'') > g(``tiger''|``a brown fox jumps over a lazy'')$
+\end{enumerate}
+ 
+ \item $\mathcal{V}$ is the vocabulary. For computing sake, $g$ is simplifed into $g(x, C(w_{i-\tau-1}), \dots, C(w_{i-1}))$ where $x$ is the index of the target word (correct or fake) in the vocabulary. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{First neural language model (cont.)}
+\begin{columns}
+   \begin{column}{.6\textwidth}
+      \includegraphics[width=\textwidth]{Bengio_first_NN_model.png}  
+ {     \tiny    Note the subscripts are different.  }
+   \end{column}
+   \begin{column}{.6\textwidth}
+      \begin{itemize}
+       \item Bengio et al. (2003) used a feedforward network to do it.
+       \item Just 3 layers: 
+       \begin{enumerate}
+        \item input (vectors of context words), 
+        \item middle, 
+        \item output (each neuron in the output corresponds to (the vocabulary index of) a word)
+       \end{enumerate}
+       \item $g$ at ``most computation here''.
+      \end{itemize}
+   \end{column}
+\end{columns}
+\end{frame}
+
+%\begin{frame}{What is softmax? }
+% \begin{itemize}
+%  \item A typical function in the output layer of a multi-class classification problem. 
+%  \item Classification by regression, hence called softmax regression. 
+%  \item It's similar to $\max$, but softer. 
+%  \item $softmax([x_1, x_2, \dots, x_n]) = \left [\frac{e^{x_1}}{\sum_i^n e^{x_i}}, \frac{e^{x_2}}{\sum_i^n e^{x_i}},\dots, \frac{e^{x_n}}{\sum_i^n e^{x_i}}\right] $
+%  \item See also: \url{https://developers.google.com/machine-learning/crash-course/multi-class-neural-networks/softmax}
+% \end{itemize}
+%\end{frame}
+
+\begin{frame}{Cost function of a neural language model}
+ \begin{itemize}[<+->]
+  \item Maximize the probablities of correct examples, e.g., $g(``dog''|\text{``a brown fox jumps over a lazy''})$ 
+  \item Minimize those of all fake exampels,  e.g., $g(``penguin''|\text{``a brown fox jumps over a lazy''})$, $g(``homework''|\text{``a brown fox jumps over a lazy''})$
+  \item Put them all together: 
+   $J = g(\text{correct target}, context) - g(\text{fake target}, context)$ 
+   Max it! 
+  \item During the training, the $g$ for correct targets grow, while the $g$ for fake targets drop, because the $C$ for them is being updated. 
+  \item Actually Bengio et al. 2003 has only the first term, lack of the part for fake targets. 
+  \item For computational stablity, usually $\log g$.
+  \item How to generate fake samples? Let all words but ``dog'' to pair with context ``a brown fox jumps over a lazy''? 
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Negative sampling}
+ \begin{itemize}[<+->]
+  \item Too many fake samples. For each correct target (e.g., ``a quick brown fox jumps over a lazy dog''), we can have $|\mathcal{V}|-1$ fake/negative samples (e.g., ``a quick brown fox jumps over a lazy cat/penguin/car/code...''). 
+  \item A better strategy is to just sample some of them. 
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Recap: Bengio 2003, first NNLM}
+\begin{itemize}[<+->]
+  \item Words are represented into vectors using a look-up table (embedding matrix)
+  \item The look-up table is updated using backpropgragation (thus word embeddings are updated)
+  \item Context words are mapped together into the output layer 
+  \item Forward (not to be confused with feedforward): using history words to predict next word 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Mnih \& Hinton, ICML 2007, bi-linear word-interaction model}
+\begin{itemize}[<+->]
+  \item The goal is still to use left history words $w_1$ to $w_{n-1}$ to predict the n-th word $w_n$
+  \item $$ E(w_n ; w_{1:n-1}) = - \left ( \sum_{i=1}^{n-1} v_i^T R C_i  \right ) R^T v_n - bias $$ 
+  where $E$ is not error by energy, $v_i$ is the embedding of the $i$-th word. 
+  \item $R$ is the embedding matrix while $C_i$'s are the weights of the language model. 
+  \item Bi-linear: embeddings of context words $v_i^T R$ are linear projected by $C_i$'s, and then the summation of projections dot product with the embedding of the target word $R^Tv_n$. 
+  \item Purely linear: faster than tanh used in Bengio 2003. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Collobert \& Weston, ICML 2008, A Unified Architecture for Natural Language Processing: Deep Neural Network with Multitask Learning}
+\begin{itemize}[<+->]
+  \item Lookup-table layer: embedding layer 
+  \item Convolutional layers to extract features
+  \item TDNNs to deal with variable lengths of sentences. 
+  \item Position encoding: encode the distance between every word in the sentence and the word to be predicted 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Separating word embeddings and language models}
+\begin{itemize}[<+->]
+   \item All work up to this point tries to learn word embeddings and language models together: one network with both the projection/LUT layer  and the language model layer (for the task). 
+   \item In  Mokolov et al., ICASSP 2009, ``Neural network based language models for higly inflective languages'', the authors noticed that separating the two can be better. 
+   \item This becomes the foundation of the word2vec. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Mokolov et al., ICASSP 2009, Neural network based language models for higly inflective languages}
+\begin{itemize}[<+->]
+   \item Did not refer to Bengio's or Hinton's models at all. 
+   \item Words like ``embedding'' or ``look-up table'' do not appear in this paper. 
+   \item Just brutal force: one-hot encoding as the input, which does the propose of embedding layer (maybe) unintentionally. 
+   \item Per the authors, they did so hoping to form a clustering of word representations at the hidden layer, e.g., ``see'', ``saw'', ``seen'' would be mapped to similar vectors. 
+   \item Separating the training of word embeddings and language models. 
+   \item First train word embeddings by predicting the next word based on the previous word, called bigram network in the paper. 
+   \item Then train n-gram LM using the word embeddings just trained. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Some thoughts about research}
+\begin{itemize}[<+->]
+   \item Mikolov et al. used extremely simple networks in their ICASSP 2009 paper. 
+   \item Nothing fancy like bi-linear interactions. 
+   \item Their terminology differs from those appearing in Bengio's or Hinton's. 
+   \item Their InterSpeech 2010 paper ``Recurrent neural network based language model'' is just Elman's network. Again, one-hot encoding as input. 
+   \item Hypothetically, if they submitted the papers to ACL/NAACL/EMNLP/COLING, what feedback would they receive? ``Trivial model,'' ``nothing new,'' ``lack of comparison with X,Y,Z''. 
+   \item The beauty of science is to make things simple.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Word2vec (2013)}
+\begin{itemize}[<+->]
+ \item Two models: CBOW (similar to Bengio et al. 2003) and Skip-gram. 
+ \item CBOW: use context to predict target word.  
+ \item Skip-gram: use target word to predict context words: 
+ \item Very simple network architecture: For CBOW, see \url{https://www.tensorflow.org/tutorials/representation/word2vec} For Skip-gram, see \url{http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/}
+ \item For math, see \url{https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf}
+%  \includegraphics[width=\textwidth]{skipgram_training_data.png}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Why word2vec succeeded}
+\begin{itemize}[<+->]
+   \item Separating word embedding learning and language model learning. 
+   \item A super simple linear layer -- faster training. 
+   \item Skip-gram -- updating the embedding of only one word each time. 
+   \item Bidirectional context: forward and backword 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Limitations of word2vec}
+\begin{itemize}[<+->]
+   \item It only uses local context information. 
+   \item However, some local context words do not contain much semantics of the center word, e.g., ``the'' in ``The cat sat on the mat,'' because they have lots co-occurence with other words. 
+   \item Solution: remove stop words from the corpus. 
+   \item But that's arbitrary and relies on manual rules. 
+   \item Better solution: make use of word-word co-occurence in a global scope. 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{GloVe}
+\begin{itemize}[<+->]
+ \item We have seen two approaches to word embedding: factorization on co-cooccurence matrixes and neural network-based embedding using local context. 
+ \item GloVe combines the benefit of the two. 
+ \item Key observation: ratios of co-occurrence probabilities reveal semantics better  than co-occurence probabilities. 
+ \includegraphics[width=\textwidth]{glove_table.png}
+ \item ``water'' and ``fashion'' both have little power to tell the difference between ``ice'' and ``steam'': ratios around 1. They are both about water and have little connection with fashion. But ``solid'' and ``gas'' can: ratios much larger or smaller than 1. 
+ \item $P(k|\text{ice})P(k|\text{steam}) >> 1 $ if $k$ is closer to ``ice'', and $<<1$ if $k$ is closer to ``steam''. 
+ \item Challenge: how to define a loss function to achieve the t
+ \item Starting point: Instead of modeling $g(w_1, w_2)$, let's model $g(w_1, w_2, w_k)$ where $w_k$ can be any word. 
+ \item See also: \url{http://mlexplained.com/2018/04/29/paper-dissected-glove-global-vectors-for-word-representation-explained/} and \url{http://text2vec.org/glove.html}
+\end{itemize}
+\end{frame}
+ 
+\begin{frame}{The loss of function of GloVe}
+\begin{itemize}[<+->]
+ \item GloVe wants to archive a relation $F$ of two words $w_i$ and $w_j$ and a context word $w'_k$ ($'$ indicating the context word, not an operation) such that $F(w_i, w_j, w'_k) = P_{ik} / P_{jk}$ where $P_{ik}$ and $P_{jk}$ are the co-occuring probability of $w_i$ and $w'_k$ and that of $w_j$ and $w'_k$. 
+ \item First, the difference between $w_i$ and $w_j$ is expected to be characterized linearly. The simplest linear difference is vector subtraction.  Hence, 
+   $F(  w_i-w_j, w'_k) = P_{ik} / P_{jk}$. $F$ is overloaded. 
+ \item Second, the difference $w_i-w_j$ with respect to the context word $w'_k$ to be linearly characterized as well. The simplest form is dot product. Hence, $F(  (w_i-w_j)^T w'_k) = P_{ik} / P_{jk}$. $F$ is overloaded again. 
+ \item Third, we want to characterize the difference between any two words using their co-occourence, regardless of whether a word is a context word or not. Hence, we want $F((w_i-w_j)^T w'_k) = F(w_i^T w'_k + (-w_j^Tw'_k)) = F(w_i^T w'_k) \circ F(-w_j^T w'_k)$ where $\circ$ is an operation to be found. Such an $F$ is known as a group homomorphism in discrete math.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The loss of function of GloVe II}
+\begin{itemize}[<+->]
+ \item We can make $\circ$ to be super simple, just multiplication. Thus, 
+ $F((w_i-w_j)^T w'_k) = F(w_i^T w'_k) \cdot F(-w_j^T w'_k)$
+ Then $F$ is a homomorphism between groups $(\mathbb{R}, +)$ and $(\mathbb{R}^+, \times)$.
+ \item Exponential functions are such homomorphism, i.e., $e^{a+b} = e^a \cdot e^b$, thus $F=\exp$. 
+ \item Based on the definition, 
+ $F((w_i-w_j)^T w'_k) = P_{ik}/P_{jk}$ and $F((w_j-w_i)^T w'_k) = P_{jk}/P_{ik}$ ($i$ and $j$ flipped in the second equation). Their product $F(x)F(-x)={P_{ik}\over P_{jk}}{P_{jk}\over P_{ik}}=1$ or $F(-x)={1\over F(x)}$. 
+ \item Using this property, we have  $F(w_i-w_j)^T w'_k) = F(w_i^T w'_k) \cdot F(-w_j^T w'_k) = {F(w_i^T w'_k) \over F(w_j^Tw'_k)}$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The loss of function of GloVe III}
+\begin{itemize}[<+->]
+ \item Recalling that $F( (w_i-w_j)^T w'_k) = P_{ik} / P_{jk}$, we have $F(w_i^T w'_k) = \exp(w_i^T w'_k ) =  P_{ik} = X_{ik} / X{i}$ where $X_{ik}$ is the global cooccurence of $w_i$ and $w_k$ and $X_i$ is the global occurence of $w_i$. 
+ \item Log on both sides, we have $w_i^T w'_k = \log X_{ik} - \log{X_i}$ where $\log{X_i}$ has nothing to do with $w'_k$ and hence is absorbed into a bias: $w_i^T w'_k = \log{X_ik} + b_i$. 
+ \item Last tuning: the authors want the formula above to be symmetric to both $w'_k$ and $w_i$, thus the bias term is not only there for non-context word. Hence they add a bias for the context word: $w_i^T w'_k = \log X_{ik} + b_i + b'_k$. 
+ \item Then the loss function is $(\log X_{ik} - w_i^T w'_k - b_i - b'_k)^2$ and the goal is to minimize it. 
+ \item Not really. One more thing. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The loss of function of GloVe IV}
+\begin{itemize}[<+->]
+ \item Word pairs have different frequencies in a corpus. So they should have different contributions to the loss function. 
+ \item $J = \sum_{i,j= 1}^{|\mathcal{V}|} W(X_{i,j}) (\log X_{ij} - w_i^T w_j - b_i - b_j)^2$
+ \item Two goals of the weight function $W$: $W(X_{i,j})$ cannot be too large if $X_{i,j}$ is small whereas it cannot be too large also for frequenty $w_i$ and $w_j$ pairs. 
+ \item An implementation: 
+ $$W(X_{i,j}) = 
+ \begin{cases}
+ (X_{i,j} / X_{max})^\alpha & if~~ X_{i,j} < X_{max}\\
+ 1 & o/w
+ \end{cases} $$
+ where $X_{max}$ is the maximal cooccurence of two words in the corpus. 
+ \item Empirical study finds that $\alpha=3/4$ is a good number. 
+  \item See also: \url{http://mlexplained.com/2018/04/29/paper-dissected-glove-global-vectors-for-word-representation-explained/} and \url{http://text2vec.org/glove.html}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sentence embedding}
+ \begin{itemize}
+%  \item \url{http://blog.aylien.com/overview-word-embeddings-history-word2vec-cbow-glove/}
+  \item DAN
+  \item Skip-thought
+  \item Transformer 
+ \end{itemize}
+\end{frame}
+
+
+
+\end{document}
+
