@@ -8,4 +8,6 @@
 
 ## Semantic search 
 
-## Text-to-tuples  
+## Text-to-commands/aspects/actions 
+
+## Zero-shot or few-shot in NLP 
