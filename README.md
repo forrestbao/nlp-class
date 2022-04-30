@@ -2,7 +2,7 @@
 
 This respository is for the NLP class offered at Iowa State University from Fall 2017 to Fall 2021. 
 
-**Instructor**: Prof. Dr. Forrest Sheng Bao [fsbao.net](http://fsbao.net)
+**Instructor**: Prof. Dr. Forrest Sheng Bao [forrestbao.github.io](forrestbao.github.io)
 
 Slides can be found in the folders for each lecture unit. Default file name is `EE.pdf`.
 
