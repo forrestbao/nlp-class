@@ -1,7 +1,7 @@
 # Project ideas
 
 ## Text generation metrics:
-1. Reimplementing LS_Score 
+1. Reimplementing [LS-Score](https://github.com/whl97/LS-Score)
 2. Test SUM-QE on different test sets
 3. Data augmentation on documents rather than summaries 
 4. BERTScore without reference summary 
@@ -13,7 +13,7 @@
 * SUPERT
 * BLANC
 * SummaQA
-* LS_Score
+* [LS-Score](https://github.com/whl97/LS-Score)
 * Sum-QE 
 
 **References on NLG metrics**
