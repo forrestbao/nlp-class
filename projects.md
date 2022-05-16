@@ -10,18 +10,19 @@
 7. Using longer inputs, e.g, Big Bird 
 
 **References on summarization metrics** 
-* SUPERT
-* BLANC
-* SummaQA
+* [SUPERT](https://arxiv.org/pdf/2005.03724.pdf)
+* [BLANC](https://arxiv.org/pdf/2002.09836.pdf)
+* [SummaQA](https://arxiv.org/pdf/1909.01610.pdf)
 * [LS-Score](https://github.com/whl97/LS-Score)
-* Sum-QE 
+* [Sum-QE](https://aclanthology.org/D19-1618.pdf)
 
 **References on NLG metrics**
 * [BLEURT, ACL 2020](https://ai.googleblog.com/2020/05/evaluating-natural-language-generation.html)
 
 **References on the evaluation of summarization metrics**
-* SummEval
-* Newsroom
+* [SummEval](https://arxiv.org/pdf/2007.12626.pdf)
+* [Newsroom](https://arxiv.org/pdf/1804.11283.pdf)
+* [RealSumm](https://aclanthology.org/2020.emnlp-main.751.pdf)
 
 **References on summarization** 
 * PEGASUS
