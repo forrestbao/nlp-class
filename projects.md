@@ -1,6 +1,7 @@
 # Project ideas
 
 ## Text generation metrics:
+0. Reveal experimental unfairness in Sum-QE and "Train-free and Ref-free". 
 1. [SueNes]([url](https://github.com/forrestbao/SueNes)) with data mixed from different datasets and different mutation methods.
 2. Test SUM-QE on different test sets
 3. Data augmentation on documents rather than summaries 
@@ -14,7 +15,8 @@
 * [BLANC](https://arxiv.org/pdf/2002.09836.pdf)
 * [SummaQA](https://arxiv.org/pdf/1909.01610.pdf)
 * [LS-Score](https://github.com/whl97/LS-Score)
-* [Sum-QE](https://aclanthology.org/D19-1618.pdf)
+* [Sum-QE, EMNLP 2019](https://aclanthology.org/D19-1618.pdf)
+* [Train-free and ref-free, ACL 2021](https://aclanthology.org/2021.acl-long.34.pdf)
 
 **References on NLG metrics**
 * [BLEURT, ACL 2020](https://ai.googleblog.com/2020/05/evaluating-natural-language-generation.html)
