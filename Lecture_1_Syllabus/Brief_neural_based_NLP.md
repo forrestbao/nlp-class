@@ -50,13 +50,19 @@ classoption:
 * [OpenAI grade school math ](https://github.com/openai/grade-school-math)
 
 # What it takes 
+
+:::::::::::::: {.columns}
+::: {.column width="40%"}
 * Token-level embedding: string to vectors 
 * Attention
 * Some complex flow of information (residual, recurrent, normalization, etc.)
 * Finally, mapping the neural network output back to string
 * Proper training data 
+:::
+::: {.column width="60%"}
 
-```mermaid
+
+```{.mermaid width=300 format=pdf}
 graph TD; 
 
 W1-->|embedding|E1;
@@ -74,6 +80,9 @@ E2-->|a23|F3;
 E3-->|a33|F3;
 
 ```
+:::
+::::::::::::::
+
 
 # Training data is all you needed
 * Without training data, [how to solve math](http://geometry.allenai.org/demo/)
