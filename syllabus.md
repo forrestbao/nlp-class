@@ -33,8 +33,8 @@ Introduction to concepts and techniques for automatically processing and underst
 
 The course involves the instructor's lectures and student presentations. The instructor will cover the basics of NLP. Students are required to complete a group or individual research project. An oral presentation of the term project is expected at the end of the semester. You are encouraged to pick a topic that would apply NLP in your research area.
 
-- Presentating a recent milestone paper in the area of NLP: 70% (paper presentation can be susbstituted if the project is considered moderate or hard.)
-- Project: 30%
+- Presentating a recent milestone paper in the area of NLP: 50% (paper presentation can be susbstituted if the project is considered moderate or hard.)
+- Project: 50%
 
 **FINAL GRADES**: Final grades will be given as follows, although the instructor retains the right to lower the grade thresholds at his discretion.
 
