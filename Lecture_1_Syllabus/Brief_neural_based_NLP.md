@@ -54,7 +54,7 @@ classoption:
 :::::::::::::: {.columns}
 ::: {.column width="40%"}
 * Token-level embedding: string to vectors 
-* Attention
+* (Self-)Attention (attention weights, $aij$'s in the figure, are floating-point numbers)
 * Some complex flow of information (residual, recurrent, normalization, etc.)
 * Finally, mapping the neural network output back to string
 * Proper training data 
@@ -62,12 +62,12 @@ classoption:
 ::: {.column width="60%"}
 
 
-```{.mermaid width=300 format=pdf}
+```{.mermaid width=400 format=pdf}
 graph TD; 
 
-W1-->|embedding|E1;
-W2-->|embedding|E2; 
-W3-->|embedding|E3; 
+W1["I"]-->|embedding|E1["[0.05, 0.17, 0.39, ...]"];
+W2["am"]-->|embedding|E2["0.19,0.72, 0.64, ..."]; 
+W3["happy"]-->|embedding|E3["0.46, 0.89, 0.37, ..."]; 
 
 E1-->|a11|F1;
 E2-->|a21|F1;
