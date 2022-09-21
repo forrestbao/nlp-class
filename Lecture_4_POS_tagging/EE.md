@@ -22,6 +22,9 @@ header-includes: |
     \newcommand{\argmaxF}{\mathop{\mathrm{argmax}}\limits}
     \usepackage{times}
     \setbeamercovered{dynamic}
+
+    \DeclareMathOperator*{\argmax}{arg\,max}
+    \DeclareMathOperator*{\argmin}{arg\,min}
 ---
 
 # Outline
@@ -42,7 +45,7 @@ Adj. & n. & n. & v.  & dt. & n. & cj. & n. & n.
     Adj.        n.          n.       v.   dt.    n.     cj.      n.         n.     
   --------- ---------- ------------ ---- ----- ------- ----- ---------- ---------- -- -->
 
-# Part of speech tagging
+# Part-of-speech tagging
 
 -   "In traditional grammar, a part of speech (abbreviated form: PoS or
     POS) is a category of words (or, more generally, of lexical items)
@@ -193,36 +196,49 @@ Adj. & n. & n. & v.  & dt. & n. & cj. & n. & n.
 -   The problem of estimating the sequence of hidden states given a
     sequence of observations is known as *decoding* in HMM.
 
--   Basic principle (Lemma 1): $\max(x\cdot y) = \max(x) \cdot y$, if
+-   Basic principle (Lemma 1): $\max_{x\in X}(x\cdot y) = \max_{x\in X} \cdot y$, if
     $x$ is a real variable and $y$ is a real constant.
 
 -   In each step $i$ (except the start and end), we have $N$ possible
     states/tags $t_i$'s, each of which can come from $N$ possible
     $t_{i-1}$'s.
 
-# Viterbi algorithm in math induction
+# Viterbi algorithm in math induction I 
 
 -   If the sentence has only one word: $\mathbf{W}= [w_1]$. The best tag
     $t_1$ should maximize $P_T(t_1|\rhd) P_E(w_1|t_1)$ where $\rhd=t_0$
     is the beginning of the sentence.
 
 -   If it has two: $\mathbf{W}= [w_1, w_2]$. The best tags $t_1$ and
-    $t_2$ shall maximize $\Pi_{i=1}^{2} P_T(t_i|t_{i-1}) P_E(w_i|t_i)$ =
-    $P_T(t_1|\rhd) P_E(w_1|t_1)  P_T(t_2|t_1) P_E(w_2|t_2)$. Just search
-    over the $N^2$ combinations of $t_1$ and $t_2$, time complexity
-    $O(N^2)$.
+    $t_2$ shall maximize $$\Pi_{i=1}^{2} P_T(t_i|t_{i-1}) P_E(w_i|t_i) =
+    \overbrace{P_T(t_1|\rhd) P_E(w_1|t_1)}^{N \text{ possible } t_1} \overbrace{P_T(t_2|t_1) P_E(w_2|t_2)}^{N \text{ possible } t_2}.$$ Time complexity
+    $O(N^2)$ where $N$ is the number of possible POS tags.
 
--   If it has three: $\mathbf{W}= [w_1, w_2, w_3]$. , $$\begin{aligned}
-        &  \max P_T(t_1|\rhd) P_E(w_1| t_1) P_T(t_2|t_1) P_E(w_2| t_2) & \overbrace{P_T(t_3|t_2) P_E(w_3| t_3)}^{\text{search only happens here}} \\
-        = &  \left [   \max P_T(t_1|\rhd) P_E(w_1| t_1) P_T(t_2|t_1) P_E(w_2| t_2)  \right ]  & P_T(t_3|t_2) P_E(w_3| t_3)
+-   Question, how many $w_1$'s and $w_2$'s? Fix, given! 
+
+# Viterbi algorithm in math induction II 
+
+-   If it has three: $\mathbf{W}= [w_1, w_2, w_3]$, at the first thought, we need to compute: $$
+    \overbrace{P_T(t_1|\rhd) P_E(w_1|t_1)}^{N \text{ possible } t_1} \overbrace{P_T(t_2|t_1) P_E(w_2|t_2)}^{N \text{ possible } t_2} \overbrace{P_T(t_3|t_2) P_E(w_3|t_3)}^{N \text{ possible } t_3}.$$
+
+-   But not all $N^3$ such paths are necessarily. If there are two paths from $\rhd$ to a $t_2$, then to maximize the triple-tag product above, we only need to consider the path that maximizes bi-tag product $\overbrace{P_T(t_1|\rhd) P_E(w_1|t_1)}^{N \text{ possible } t_1} \overbrace{P_T(t_2|t_1) P_E(w_2|t_2)}^{N \text{ possible } t_2}$. The/Any smaller bi-tag product will always yield a smaller triple-tag product with any combinations of $(t_2, t_3)$. 
+
+-   Let's work on an example visually. 
+
+<!-- - Assume we have two pairs/paths of $(t_1, t_2)$: $(N, V)$ and $(DT, ADJ)$, and $P_T(t_1=N|\rhd)P_E(w_1|t_1=N)P_T(t_1=V|tN)P_E(w_2|V) > P_T(DT|\rhd)P_E(w_1|DT)P_T(ADJ|DT)P_E(w_2|ADJ)$. Then to maxize the triple-tag product $P_T(t_1|\rhd) P_E(w_1| t_1) P_T(t_2|t_1) P_E(w_2| t_2)  P_T(t_3|t_2) P_E(w_3| t_3)$, we only need to compute and compare $P_T(N|\rhd)P_E(w_1|N)P_T(V|N)P_E(w_2|V) P_T(t_3|t_2) P_E(w_3| t_3)$.  -->
+
+# Viterbi algorithm in math induction III
+
+-   Thus $$\begin{aligned}  &  \argmax_{t_1, t_2, t_3} P_T(t_1|\rhd) P_E(w_1| t_1) P_T(t_2|t_1) P_E(w_2| t_2)  \overbrace{P_T(t_3|t_2) P_E(w_3| t_3)}^{\text{search only happens here}} \\
+        = & \argmax_{t_2, t_3}P_T(t_3|t_2) P_E(w_3| t_3) \cdot  \argmax_{t_1,t_2} P_T(t_1|\rhd) P_E(w_1| t_1) P_T(t_2|t_1) P_E(w_2| t_2)  & 
         % \\
         % =  & ~~~~~~~~~~~~ v_{1,2}  &  P_T(t_3|t_2) P_E(w_3| t_3) 
         \end{aligned}$$
 
--   No need to check $N^3$ combinations of tags $t_1$, $t_2$ and $t_3$,
-    many of which will not maximize the final number regardless of the
-    value of $P_T(t_3|t_2) P_E(w_3| t_3)$. Instead, check
-    $N + 2N^2 \in \mathcal{O}(3N^2)$ combinations.
+
+-   New time complexity: $N + 2N^2 \in \mathcal{O}(3N^2)$.
+
+-   How did the magic happen? 1. Lemma 1. 2. Markovian. 
 
 # HMM decoding in Viterbi algorithm
 
@@ -251,8 +267,8 @@ Adj. & n. & n. & v.  & dt. & n. & cj. & n. & n.
     number of tags and $l$ is the length of the sentence under
     POS-tagging.
 
--   For details, read chapter 9.4 of
-    <https://web.stanford.edu/~jurafsky/slp3/9.pdf>.
+-   For details, read chapter 8.4 of
+    <https://web.stanford.edu/~jurafsky/slp3/8.pdf>.
 
 # What do you need?
 
@@ -270,6 +286,11 @@ Adj. & n. & n. & v.  & dt. & n. & cj. & n. & n.
     can be easily resolved by introducing a origin state and the
     transition probabilities from the origin state to all other states.
 
+# What about unknown words? 
+-   If we have an unknown word, what is the emission probability? 
+-   A technique called **smoothing**. 
+-   It assumes a fixed probability for unknown words. 
+
 # Computational problems
 
 -   What is the problem of multiplying a lenghty list of probabilities?
@@ -282,16 +303,30 @@ Adj. & n. & n. & v.  & dt. & n. & cj. & n. & n.
 -   See Neubig's slide 8 on HMM.
     <http://www.phontron.com/slides/nlp-programming-en-04-hmm.pdf>
 
+# Recap: HMM for POS tagging
+-   We leverage the Bayes' rule
+
+-   We simplify the approach by assuming the Markovian relation between two consecutive tags/states. 
+
+-   Finally, to reduce computational complexity, we use the Viterbi algorithm. 
 
 # Conditional Random Fields
 
--   HMM uses Bayes theorem to find the most likely tag sequences
-    $\mathop{\mathrm{argmax}}\limits_T P(\mathbf{T}|\mathbf{W})$.
+-   HMMs assume a generative process to determine the most likely path, i.e., based on the parameters of the model, which tag sequence is most likely. They are **generative** models. 
 
--   CRFs directly estimates it.
+-   CRFs directly estimates it. CRFs are **discriminative** models. 
 
--   It works by evaluting the chances of each tag sequence over all
-    possible tag sequences in a softmax fashion:
+-   How?  $P(\mathbf{T}|\mathbf{W}) = \frac{f(\mathbf{T}, \mathbf{W})}{\sum_{T\in \mathcal{T}}f(\mathbf{T}, \mathbf{W}))}$ where $f$ is a function to be found and $\mathcal{T}$ is all possible tag sequences. 
+
+-   Then it let $f$ be a weighted sum of many **feature functions**: $f(\mathbf{W}, \mathbf{T}) = \sum_{k=1}^K u_k F_k(\mathbf{W}, \mathbf{T})$, 
+    where every feature function $F_k$ is a function
+    of both word sequence and tag sequence. 
+
+-   What are features? E.g., if the previou token is "the", then the next token is unlike to be a verb. We will see more later. 
+
+# Conditional Random Fields II 
+
+-   Put together and softmax it: 
     $$P(\mathbf{T}|\mathbf{W}) = 
         {
         {\exp \left (  \sum_{k=1}^K u_k F_k(\mathbf{W}, \mathbf{T})  \right ) }
@@ -300,20 +335,30 @@ Adj. & n. & n. & v.  & dt. & n. & cj. & n. & n.
         \exp \left (  \sum_{k=1}^K u_k F_k(\mathbf{W}, \mathbf{T'})  \right ) }
         }$$
 
--   Then just need to find
+-   We need to find
     $\mathop{\mathrm{argmax}}\limits_{T\in \mathcal{T}} P(T|W)$.
 
--   $u_k$ is the weight for the $k$-th feature $F_k$ which is a function
-    of both word sequence and tag sequence.
+-   Oh, this can be similified again. As in the HMM case, the denominator does not matter: 
+    $$\argmax_{\mathbf{T}\in\mathcal{T}} P(\mathbf{T}|\mathbf{W}) = \argmax \exp \left (  \sum_{k=1}^K u_k F_k(\mathbf{W}, \mathbf{T})  \right )$$
 
--   Linear-chain CRF:
-    $F_k(\mathcal{W}, \mathcal{T}) = \sum_{i=1}^l f_k(w_{i-1}, w_i, \mathcal{T}, i)$
-    The sum of a function of the word sequence and only the current and
-    previous tags.
+-   A common type of CRF is **linear-chain CRF**:
+    $F_k(\mathbf{W}, \mathbf{T}) = \sum_{i=1}^l f_k(t_{i-1}, t_i, \mathbf{W}, i)$
+    which considers the relation between the entire word sequence $\mathbf{W}$ and only the current and
+    previous tags. Note that we have to sum over all positions. 
+
+# Deja Vu? Viterbi again! 
+
+-   $F_k(\mathbf{W}, \mathbf{T}) = \sum_{i=1}^l f_k(t_{i-1}, t_i, \mathbf{W}, i)$
+
+-   How many possible combinations? For the word at position $i$, we need to consider $N$ possible previous tags $t_{i-1}$ and $N$ possible current tags $t_{i-1}$. 
+
+-   But, since we only care $\argmax$, we can use Viterbi algorithm again. 
 
 # Features of using CRFs in POS tagging
 
 -   Manually engineered features
+
+-   A great category of features are called **shape** feature, e.g., 
 
 -   See §8.5.1 of Jurafsky's book.
 
