@@ -121,14 +121,14 @@ n-gram models
 
 # Bag of words
 
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\includegraphics[width=\textwidth]{CMU_BOW.jpg}  
-\end{column}
-\begin{column}{0.5\textwidth}
+:::::::::::::: {.columns}
+::: {.column width="60%"}
+![](CMU_BOW.jpg)
+:::
+::: {.column width="40%"}
 The bag of words and the background words as seen in Gates building, CMU
-\end{column}
-\end{columns}
+:::
+::::::::::::::
 
 # Bag of words (cont.)
 
