@@ -6,20 +6,20 @@
 
 **Com S 579X: Natural Language Processing (NLP)**
 
-**Fall 2020**
+**Fall 2022**
 
 This syllabus is subject to change.
 
-**INSTRUCTOR**: Dr. Forrest Sheng Bao (Atanasoff Hall 102), email: fsb at iastate dot edu 
+**INSTRUCTOR**: Dr. Forrest Sheng Bao (203 Atanasoff Hall), email: fsb at iastate dot edu 
 
-**Teaching Assistant(TA)**: Ge ``Roger" Luo, email:  gluo at iastate dot edu 
+**Teaching Assistant(TA)**: Ge ``Roger" Luo, email:  gluo at iastate dot edu  **Please CC the TA for all communication with the instructor**
 
 **Slides and reading materials URL**: https://github.com/forrestbao/nlp-class
 
 **Canvas**: https://canvas.iastate.edu/courses/95608
 Canvas will be used to post announcements, grades, and lecture videos. Also, feel free to make discussion on Canvas. 
 
-**OFFICE HOURS**: 14:40 to 15:40 Tuesdays and Thursdays, or by appointment 
+**OFFICE HOURS**: 14:40 to 15:40 Tuesdays and Thursdays, 203 Atanasoff, or by appointment 
 
 **TEXTBOOK**: **Suggested**
 - Speech and Language Processing, by Daniel Jurafsky and James Martin, 3rd Edition, 2020. Free online at https://web.stanford.edu/~jurafsky/slp3/. 
@@ -27,7 +27,7 @@ Canvas will be used to post announcements, grades, and lecture videos. Also, fee
 
 ## Course Description:
 
-Introduction to concepts and techniques for automatically processing and understanding natural language with computers; language model; Part-of-Speech tagging; machine learning approaches to natural language processing; neural language models; selected applications in automatic speech recognition, information extraction, question answering, summarization, and machine translation; hands-on experience.
+Introduction to concepts and techniques for automatically processing and understanding natural language with computers; language model; Part-of-Speech tagging; machine learning approaches to natural language processing; neural language models; information extraction, question answering, summarization, and machine translation; hands-on experience.
 
 ## Course organization and grades
 
@@ -51,22 +51,14 @@ The course involves the instructor's lectures and student presentations. The ins
 | 5     | Machine Learning basics, Linear classifiers, SVMs, feature engineering in NLP    |       |
 | 6     | Neural Networks and Deep Learning                                                |       |
 | 7     | Word and sentence embeddings                                                     |       |
-| 8     | Tasks of Deep Learning in NLP (machine translation, QA/MRC, sequence tagging)    |       |
-| 9     | Text reasoning and knowledge extraction                                          |       |
-| 10    | Special topics: text generation metrics                                          |       |
+| 8     | Transformers                                                                     |       |
+| 9     | Tasks of Deep Learning in NLP (machine translation, QA/MRC, sequence tagging)    |       |
+| 10    | Text reasoning and knowledge extraction                                          |       |
 | 11    | Text generation: machine translation, summarization                              |       |
-| 12    | Advanced topics of Deep Learning with applications in NLP (autoencoder, GAN)     |       |
+| 12    | Special topics: text generation metrics                                          |       |
 | 13    | Guest lectures or student presentation                                           |       |
 | 14    | Guest lectures or student presentation                                           |       |
 | 15    | Guest lectures or student presentation                                           |       |
-
-## COVID-19
-
-Face masks encouraged: Because of the continuing COVID-19 pandemic, all students are encouraged—but not required—to wear face masks, consistent with current recommendations from the Centers for Disease Control and Prevention.  Further information on the proper use of face masks is available at: https://www.cdc.gov/coronavirus/2019-ncov/your-health/effective-masks.html . 
-
-Vaccinations encouraged:  All students are encouraged to receive a vaccination against COVID-19.  Multiple locations are available on campus for free, convenient vaccination. Further information is available at: https://web.iastate.edu/safety/updates/covid19/vaccinations . Vaccinations may also be obtained from health care providers and pharmacies.
-
-Physical distancing encouraged for unvaccinated individuals:Classrooms and other campus spaces are operating at normal capacities, and physical distancing by faculty, staff, students, and visitors to campus is not required. However, unvaccinated individualsare encouraged to continue to physically distance themselves from others when possible.
 
 ## Free expression
 
