@@ -249,12 +249,51 @@ Other ways to estimate $P(w_1, \dots, w_l)$ beyond n-gram:
 
 -   neural language models: based on neural networks, embedding
 
+
+# TF-IDF and document retrieval I
+
+<!-- -   How to create a feature vector to detect sentences about a topic? -->
+
+- Let's put the BOW model into application. 
+
+- An example is document retrival, or more general, **information retrieval (IR)**.
+
+- The goal of document retrival is to return the most relavant, thus expected, documents to users based on their queries. 
+
+- Google is an example of IR. 
+
+- For example, if a user searches for "matrix" among the user manuals of Pytorch, Numpy, SpaCy, then the manual of Numpy should (probably) be ranked the highest, then PyTorch in the middle, and finally Spacy.  
+
+- If the query is "language model", the order might be flipped. 
+
+- How do we do it? 
+
+
+# TF-IDF and document retrieval II
+
+- Intuition 1: "matrix" occurs the most frequent in the manual of Numpy, and then PyTorch, finally Spacy. 
+
+- This is the idea of **term frequency** or TF: $$ \frac{{f}_{t, d}}{\sum_{t' \in d} f_{t', d}}$$ where $d$ is a document, $t$ is a specific term,  $t'$ is any term in the document $d$, and $f$ is the frequency of a term in a document. 
+
+- However, Intuition I does not consider the occurence of the query term is other documents. 
+
+# TF-IDF and document retrieval III
+
+- Intuition 2: If a term occurs in many documents, then this term is not specific to a particular document. Hence, its importance should be less. 
+
+- This is idea of **inverse document frequency**: $$\mathrm{idf}(t, D) = \frac{|D|}{|d\in D : t\in d|} $$ where $D$ is the set of all documents under consideration, e.g., the user manuals of many packages. 
+
+- Put them together: TF-IDF $$\mathrm{tfidf}(t,d,D) = \mathrm{tf}(t,d) \cdot \mathrm{idf}(t, D)$$
+
+- In other words, IDF is a weighing factor for TF. 
+
+
 Naïve Bayes spam filter
 =======================
 
 <!-- Naïve Bayes spam filter -->
 
--   A classical application of the BOW model
+-   Another classical application of the BOW model
 
 -   Two classes: Spam ($S$) vs ham ($H$, non-spam)
 
@@ -274,25 +313,47 @@ Naïve Bayes spam filter
 -   Detailed derivation at <http://www.paulgraham.com/naivebayes.html>
     and <https://www.mathpages.com/home/kmath267/kmath267.htm>
 
-TF-IDF
-======
+# How to evaluate a model
 
-<!-- TF-IDF -->
+- How do you know the performance of a spam filter or a document retriever? 
 
--   How to create a feature vector to detect sentences about a topic?
+- They are two kinds of tasks: classification and ranking. 
 
--   Given a search term, e.g., "matlab", and a bunch of documents, how
-    to rank all documents that match the query?
+- Their judgements are different 
 
--   Intuition 1: If a document has lots occurences of "matlab" then the
-    document is strongly about MATLAB.
 
--   Intuition 2: However, if all documents contain "matlab", then the
-    importance of "matlab" in ranking results should reduce.
+# Judging a classification model
 
--   TF: Term frequency: the frequency of a term in a document.
+- Classification: map samples to different classes (discrete). 
+- The spam filtering example falls under a special, but common classification problem category: **binary classfication**.
+- We have two ground truth labels (usually denoted as $y$): true or false. 
+- We also have two prediction labels (usually denoted as $\hat{y}$): true or false. 
+- But some prediction true are not really true while some prediction false are not really false. 
+- So we have:
+  - True positive (indeed a spam)
+  - True negative (indeed a ham)
+  - False positive (a ham, but predicted as spam)
+  - False negative (a spam, but predicted as ham)
+- Thus the confusion matrix [link](https://en.wikipedia.org/wiki/Confusion_matrix)
 
--   IDF: Inverse document frequency: ratio of total number of documents
-    and the number of documents containing the term.
+# Classification is not enough
+- If we have 90 spams and 10 hams. If the model predicts all spams correctly but all hams wrongly, the accuracy is 90%. 
+- If the model truely good? 
+- Accuracy makes less sense when the dataset is **unbalanced** meaning that samples of different labels have unequal amounts. 
 
--   TF-IDF: TF $\times$ IDF.
+# Sensitivity, Recall,  Specificity, Precision
+- A fairer approach is to look at the performance on each **class**. 
+- Again, this [link](https://en.wikipedia.org/wiki/Confusion_matrix) for their definitions. 
+- In documental retrieval, precision and recall are more frequently used. See [link](https://en.wikipedia.org/wiki/Precision_and_recall). 
+
+# Overfitting and generalization
+- The naive Bayes spam filter is trained: it counts words over a corpus
+- In the spam filter case, what if the spam sender changes the strategy to draft a spam using different words, words frequencies, or styles? 
+- It may fail as the frequencies of words in a new spam differ greatly from those in the training corpus. 
+- Training vs test: getting the parameters of a model vs. checking the model's performance
+- If training and test data/set are the same, it makes less sense. 
+- If a model only works well on the training set, we say it **overfits**. 
+- If a model  works well on the test set as well, we say it **generalizes**. 
+
+# Juding a ranking model 
+- Precision@N. 
