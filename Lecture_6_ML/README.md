@@ -61,4 +61,7 @@ title: Natural Language Processing
 # You need to believe in NNs 
 "A new scientific truth does not triumph by convincing its opponents and making them see the light, but rather because its opponents eventually die and a new generation grows up that is familiar with it" --  Max Planck, Scientific autobiography, 1950, p. 33, 97
 
-[Demo]()
+# Let's switch to the ML slides 
+
+[Neural networks](https://github.com/forrestbao/MLClass/tree/master/6_Neural_Networks)
+[Deep Learning](https://github.com/forrestbao/MLClass/tree/master/8_Deep_Learning)
