@@ -48,7 +48,9 @@ are cited in the Markdown source code in the syntax:
 
 # Topic Modeling in Latent Dirichlet Allocation (LDA) 
 
-![Lee et al. (2018). Ensemble Modeling for Sustainable Technology Transfer. Sustainability.](https://www.researchgate.net/publication/326140642/figure/fig1/AS:644129876873217@1530583938944/Graphical-model-of-latent-Dirichlet-allocation-LDA.png){width=400px}
+<!-- ![Lee et al. (2018). Ensemble Modeling for Sustainable Technology Transfer. Sustainability.](https://www.researchgate.net/publication/326140642/figure/fig1/AS:644129876873217@1530583938944/Graphical-model-of-latent-Dirichlet-allocation-LDA.png){width=400px} -->
+
+![Lee et al. (2018). Ensemble Modeling for Sustainable Technology Transfer. Sustainability.](Graphical-model-of-latent-Dirichlet-allocation-LDA.png){width=400px}
 
 - Two basic probabilistic distributions.
 - First: a topic is a distribution over words, e.g., the chance of the word ``gas'' is high in the topics about cars but low in the topics about computers. This distribution is controled by the varaible $\beta$. 
@@ -58,8 +60,9 @@ are cited in the Markdown source code in the syntax:
 
 # LDA-based generative process 
 
-![Lee et al. (2018). Ensemble Modeling for Sustainable Technology Transfer. Sustainability.](https://www.researchgate.net/publication/326140642/figure/fig1/AS:644129876873217@1530583938944/Graphical-model-of-latent-Dirichlet-allocation-LDA.png){width=300px}
+<!-- ![Lee et al. (2018). Ensemble Modeling for Sustainable Technology Transfer. Sustainability.](https://www.researchgate.net/publication/326140642/figure/fig1/AS:644129876873217@1530583938944/Graphical-model-of-latent-Dirichlet-allocation-LDA.png){width=300px} -->
 
+![Lee et al. (2018). Ensemble Modeling for Sustainable Technology Transfer. Sustainability.](Graphical-model-of-latent-Dirichlet-allocation-LDA.png){width=300px}
 
 - In LDA, a document is assumed to be generated as follows. 
 - First, pick a topic distribution for a document ($P(\theta|\alpha)$). The topics are switched when generating a document, e.g., ``Today I tried out PyTorch... Then I drove 100 miles to meet a friend. ... I showed my recent workbench photo to him. ''
