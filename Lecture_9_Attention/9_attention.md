@@ -116,7 +116,7 @@ are cited in the Markdown source code in the syntax:
   $h_n = f(x_n, h_{n-1})$.
 - $h_N$, the encoder's output in the last step, contains all information of the sentence in the source language. 
 - A special token is used to trigger the starting of the decoding stage. 
-- Decoder is also an RNN: $s_m = f'(y_{m-1}, s_{m-1}, h_M)$, where $f'$ (correspond to $f$ for encoder) is the neural network that advances the decoder to state $s_m$ using the output $y_{m-1}$ and state $s_{m-1}$ at the previous step and $h_N$. 
+- Decoder is also an RNN: $s_m = f'(y_{m-1}, s_{m-1}, h_N)$, where $f'$ (correspond to $f$ for encoder) is the neural network that advances the decoder to state $s_m$ using the output $y_{m-1}$ and state $s_{m-1}$ at the previous step and $h_N$. 
 - A third function $g$ maps the decoder's state (and optionally other information) to an output token at the current step: e.g., $y_m = g(s_m)$, or $y_m= g(s_m, y_{m-1}, h_T)$. Usually, it's a 1D vector containing the probabilities of all words in the vocabulary being the next word. 
 ::::
 :::
@@ -320,7 +320,7 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 
 # Battle of the Transformers
 - BERT vs ELMo vs GPT: Fig. 3 in BERT paper. 
-- In Japanese https://elyza-inc.hatenablog.com/entry/2021/03/25/160727 
+- [In Japanese](https://elyza-inc.hatenablog.com/entry/2021/03/25/160727)
 - ![Src: Pre-Trained Models: Past, Present and Future, AI Open, 2021](https://ars.els-cdn.com/content/image/1-s2.0-S2666651021000231-gr8_lrg.jpg){width=400px}
 
 # Discriminative (e.g., BERT) vs Generative (e.g., GPT)
@@ -349,3 +349,6 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 - https://jalammar.github.io/a-visual-guide-to-using-bert-for-the-first-time/
 - https://www.tensorflow.org/text/tutorials/fine_tune_bert
 - https://www.tensorflow.org/text/guide/bert_preprocessing_guide
+
+
+# Large Language Models (LLMs) or Pretrained Language Models (PTMs)

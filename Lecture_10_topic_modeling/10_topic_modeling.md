@@ -79,6 +79,7 @@ are cited in the Markdown source code in the syntax:
 * The last two $WT$ and $DT$ is what we need to estimated. They are initialized from $TA$. 
 
 # Let's see the demo to know more details 
+
 https://deepnote.com/workspace/forrest-bao-8d3a-8e96c0f9-789e-4b51-b08f-8c67f93fd301/project/NLPclass-5185c4e4-930a-4349-b76b-be1834007069/notebook/Notebook%201-d3cd48df628e43349658499d66eb8093
 
 # What can LDA be used for

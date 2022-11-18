@@ -22,6 +22,7 @@ Canvas will be used to post announcements, grades, and lecture videos. Also, fee
 **OFFICE HOURS**: 14:40 to 15:40 Tuesdays and Thursdays, 203 Atanasoff, or by appointment 
 
 **TEXTBOOK**: **Suggested**
+
 - Speech and Language Processing, by Daniel Jurafsky and James Martin, 3rd Edition, 2020. Free online at https://web.stanford.edu/~jurafsky/slp3/. 
 - Introduction to Natural Language Processing, by Jacob Eisenstein, MIT Press, 2019 https://mitpress.mit.edu/books/introduction-natural-language-processing
 
