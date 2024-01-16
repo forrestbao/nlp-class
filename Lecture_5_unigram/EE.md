@@ -336,7 +336,7 @@ Naïve Bayes spam filter
   - False negative (a spam, but predicted as ham)
 - Thus the confusion matrix [link](https://en.wikipedia.org/wiki/Confusion_matrix)
 
-# Classification is not enough
+# Accuracy is not enough
 - If we have 90 spams and 10 hams. If the model predicts all spams correctly but all hams wrongly, the accuracy is 90%. 
 - If the model truely good? 
 - Accuracy makes less sense when the dataset is **unbalanced** meaning that samples of different labels have unequal amounts. 

@@ -51,9 +51,9 @@ The course involves the instructor's lectures and student presentations. The ins
 | 4     | N-gram language models, TF-IDF and BM25                                          |       |
 | 5     | Machine Learning basics, Linear classifiers, feature engineering in NLP          |       |
 | 6     | Neural Networks and Deep Learning                                                |       |
-| 7     | Word and sentence embeddings                                                     |       |
-| 8     | Transformers and Large Language Models (LLMs)                                    |       |
-| 9     | Tasks in LLMs (machine translation, QA/MRC, RAG, Agent, tools)                   |       |
+| 7     | Neural Language models, word and sentence embeddings, word2vec                   |       |
+| 8     | Transformers and BERT                                                            |       |
+| 9     | The LLM era: PEFT/LoRA, RAG, Agent, and multimodality                            |       |
 | 10    | Text reasoning and knowledge extraction                                          |       |
 | 11    | Text generation: machine translation, summarization                              |       |
 | 12    | Special topics: text generation metrics and hallucination                        |       |

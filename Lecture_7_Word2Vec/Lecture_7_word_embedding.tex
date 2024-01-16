@@ -1,4 +1,4 @@
-\documentclass[11pt,handout]{beamer}
+\documentclass[10pt]{beamer}
 \mode<article> % only for the article version
 {
   \usepackage{fullpage}
@@ -230,7 +230,7 @@ in 2 steps:
    \begin{column}{.6\textwidth}
       \begin{itemize}
        \item Bengio et al. (2003) used a feedforward network to do it.
-       \item Just 3 layers: 
+       \item Just 3 layers (see Eq. (1) of Bengio et al. 2003 paper): 
        \begin{enumerate}
         \item input (vectors of context words), 
         \item middle, 
@@ -257,10 +257,10 @@ in 2 steps:
   \item Maximize the probablities of correct examples, e.g., $g(``dog''|\text{``a brown fox jumps over a lazy''})$ 
   \item Minimize those of all fake exampels,  e.g., $g(``penguin''|\text{``a brown fox jumps over a lazy''})$, $g(``homework''|\text{``a brown fox jumps over a lazy''})$
   \item Put them all together: 
-   $J = g(\text{correct target}, context) - g(\text{fake target}, context)$ 
+   $J = \sum g(\text{correct target}, context) - \sum g(\text{fake target}, context)$ 
    Max it! 
   \item During the training, the $g$ for correct targets grow, while the $g$ for fake targets drop, because the $C$ for them is being updated. 
-  \item Actually Bengio et al. 2003 has only the first term, lack of the part for fake targets. 
+  \item Bengio et al. 2003 has only the first term, lack of the part for fake targets. 
   \item For computational stablity, usually $\log g$.
   \item How to generate fake samples? Let all words but ``dog'' to pair with context ``a brown fox jumps over a lazy''? 
  \end{itemize}
@@ -372,7 +372,7 @@ in 2 steps:
  \includegraphics[width=\textwidth]{glove_table.png}
  \item ``water'' and ``fashion'' both have little power to tell the difference between ``ice'' and ``steam'': ratios around 1. They are both about water and have little connection with fashion. But ``solid'' and ``gas'' can: ratios much larger or smaller than 1. 
  \item $P(k|\text{ice})P(k|\text{steam}) >> 1 $ if $k$ is closer to ``ice'', and $<<1$ if $k$ is closer to ``steam''. 
- \item Challenge: how to define a loss function to achieve the t
+ \item Challenge: how to define a loss function to train the embeddings? 
  \item Starting point: Instead of modeling $g(w_1, w_2)$, let's model $g(w_1, w_2, w_k)$ where $w_k$ can be any word. 
  \item See also: \url{http://mlexplained.com/2018/04/29/paper-dissected-glove-global-vectors-for-word-representation-explained/} and \url{http://text2vec.org/glove.html}
 \end{itemize}
