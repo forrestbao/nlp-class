@@ -1,43 +1,51 @@
-# Project ideas
+# Project (Spring 2024): RAG
 
-## Text generation metrics:
-0. Reveal experimental unfairness in Sum-QE and "Train-free and Ref-free". 
-1. [SueNes]([url](https://github.com/forrestbao/SueNes)) with data mixed from different datasets and different mutation methods.
-2. Test SUM-QE on different test sets
-3. Data augmentation on documents rather than summaries 
-4. BERTScore without reference summary 
-5. Negative sampling or contrastive learning  for translation and video-to-text evaluations 
-6. (document, refererence summary, system summary) 
-7. Using longer inputs, e.g, Big Bird 
+(Draft. To be updated.)
 
-**References on summarization metrics** 
-* [SUPERT](https://arxiv.org/pdf/2005.03724.pdf)
-* [BLANC](https://arxiv.org/pdf/2002.09836.pdf)
-* [SummaQA](https://arxiv.org/pdf/1909.01610.pdf)
-* [LS-Score](https://github.com/whl97/LS-Score)
-* [Sum-QE, EMNLP 2019](https://aclanthology.org/D19-1618.pdf)
-* [Train-free and ref-free, ACL 2021](https://aclanthology.org/2021.acl-long.34.pdf)
+Retrieval-augmented generation (RAG) is a framework to give generative models knowledge without finetuning themselves. In this way, an LLM can adapt to new tasks quickly with the presence of new documents. 
 
-**References on NLG metrics**
-* [BLEURT, ACL 2020](https://ai.googleblog.com/2020/05/evaluating-natural-language-generation.html)
+In this project, you will build a demo RAG system of the following features: 
+1. Upload/Add PDF files to a RAG platform/pipeline
+2. Index the PDF files (chunk the content of the PDF files, embed them, and store them in a vector database), if applicable 
+3. Query to the RAG system with a question and expect an answer based on the PDFs uploaded
+4. Build a GUI app for all steps above. 
+5. [Bonus] Delete a PDF file from the RAG system
 
-**References on the evaluation of summarization metrics**
-* [SummEval](https://arxiv.org/pdf/2007.12626.pdf)
-* [Newsroom](https://arxiv.org/pdf/1804.11283.pdf)
-* [RealSumm](https://aclanthology.org/2020.emnlp-main.751.pdf)
+An example demo using the Vectara AI platform is [here](https://github.com/forrestbao/vectara-python-cli)
 
-**References on summarization** 
-* PEGASUS
+You will be randomly assigned to pick one RAG solution and one UI solution to build the demo. 
 
-## Semantic search 
+## RAG solutions to pick from (to be expanded)
+* Google Vertex AI
+* LangChain
+* LlamaIndex
 
-## Text-to-commands/aspects/actions 
+## App UI systems to pick from
+* Streamlit
+* Gradio
+* Dash
+* Funix.io
 
-**References** 
-* [Grounding Open-Domain Instructions to Automate Web Support Tasks, NAACL 2021](https://aclanthology.org/2021.naacl-main.80.pdf)
-* [Mapping natural language commands to web elements, EMNLP 2018](https://nlp.stanford.edu/pubs/pasupat2018mapping.pdf)
-* [Mapping Instructions and Visual Observations to Actions with Reinforcement Learning, EMNLP 2017](https://aclanthology.org/D17-1106.pdf)
-* [Mapping Text to Knowledge Graph Entities using Multi-Sense LSTMs, EMNLP 2018](https://aclanthology.org/D18-1221.pdf)
-* [Mapping Natural Language Instructions to Mobile UI Action Sequences, ACL 2020](https://aclanthology.org/2020.acl-main.729.pdf)
+## Key challenges
+1. How to chunk the text? Please experiment with different chunk sizes for the optimal solution. For example, 100-word chunks, 200-word chunks, etc. Be sure to overlap two consecutive chunks by 25% to avoid missing information.
+2. How many chunks to retrieve and feed into an LLM? Let's make it simple by using top 5. 
 
-## Zero-shot or few-shot in NLP 
+## How to submit
+1. An open-source GitHub repo with the RAG and UI solutions integrated. 
+2. The Github repo shall include a README file with instructions on how to run the demo.
+3. Instructions and video clips to show the usage and completion of 
+3. A 5-minute video demo of the RAG system and the UI app.
+4. [Bonus] Deploy your demo to a cloud platform for public access to test your demo. 
+
+## Milestones
+* Feb. 28: Github repo set up. 
+* March 7: PDF upload and indexing via command line done. Include README file and a short video demo to show the usage and completion of your command line tool. 
+* March 30: Answer generation based on user queries via command line finish. Include README file and a short video demo to show the usage and completion of your query tool.
+* April 20: Build a GUI app for all steps above. Include README file and a short video demo to show the usage and completion of your GUI app.
+
+## Tips
+* For answer generation, use a small language model, like GPT-2. HuggingFace has free GPT-2 inference points. You can use HF_API instead of raw REST requests. 
+
+## References
+* https://python.langchain.com/docs/modules/data_connection/
+* https://cloud.google.com/blog/products/ai-machine-learning/rags-powered-by-google-search-technology-part-1
