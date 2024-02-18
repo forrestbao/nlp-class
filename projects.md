@@ -15,6 +15,15 @@ An example demo using the Vectara AI platform is [here](https://github.com/forre
 
 You will be randomly assigned to pick one RAG solution and one UI solution to build the demo. 
 
+## Steps of RAG
+1. Ingest (optional): Filters and extracts useful text from the data uploaded, e.g., ignore page numbers in PDF. 
+2. Chunk: Chunks the text into smaller pieces.
+3. Embed the chunks and store them in, e.g., a vector database or as simple as the computer's RAM. 
+4. Embed a query 
+5. Retrieval: Retrieve the top-k documents -- get a rough but fast ranking using dot-product
+6. Rerank (optional): Rerank the top-k documents based on the similarity between the query and the document, resulting in top-p documents where p < k
+7. Generate: Generate an answer based on the top-p documents.
+
 ## RAG solutions to pick from (to be expanded)
 * Google Vertex AI
 * LangChain
@@ -49,3 +58,5 @@ You will be randomly assigned to pick one RAG solution and one UI solution to bu
 ## References
 * https://python.langchain.com/docs/modules/data_connection/
 * https://cloud.google.com/blog/products/ai-machine-learning/rags-powered-by-google-search-technology-part-1
+* https://www.anyscale.com/blog/fine-tuning-is-for-form-not-facts 
+* The instructor's demo of semantic search: https://github.com/forrestbao/pebble/blob/master/NLP/semantic_search.ipynb
