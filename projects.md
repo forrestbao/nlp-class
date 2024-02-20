@@ -2,6 +2,8 @@
 
 (Draft. To be updated.)
 
+**Team**: 1-2 students. Each team one Github repo. 
+
 Retrieval-augmented generation (RAG) is a framework to give generative models knowledge without finetuning themselves. In this way, an LLM can adapt to new tasks quickly with the presence of new documents. 
 
 In this project, you will build a demo RAG system of the following features: 
@@ -9,7 +11,7 @@ In this project, you will build a demo RAG system of the following features:
 2. Index the PDF files (chunk the content of the PDF files, embed them, and store them in a vector database), if applicable 
 3. Query to the RAG system with a question and expect an answer based on the PDFs uploaded
 4. Build a GUI app for all steps above. 
-5. [Bonus] Delete a PDF file from the RAG system
+5. [Bonus] Mask out a PDF file from the RAG system
 
 An example demo using the Vectara AI platform is [here](https://github.com/forrestbao/vectara-python-cli)
 
@@ -25,7 +27,7 @@ You will be randomly assigned to pick one RAG solution and one UI solution to bu
 7. Generate: Generate an answer based on the top-p documents.
 
 ## RAG solutions to pick from (to be expanded)
-* Google Vertex AI
+* Pinecone + one language model (e.g., GPT-3.5) Do not use LangChain nor LlamaIndex. Build from scratch.
 * LangChain
 * LlamaIndex
 
@@ -42,21 +44,28 @@ You will be randomly assigned to pick one RAG solution and one UI solution to bu
 ## How to submit
 1. An open-source GitHub repo with the RAG and UI solutions integrated. 
 2. The Github repo shall include a README file with instructions on how to run the demo.
-3. Instructions and video clips to show the usage and completion of 
-3. A 5-minute video demo of the RAG system and the UI app.
-4. [Bonus] Deploy your demo to a cloud platform for public access to test your demo. 
+3. Instructions and video clips to show the usage and completion of each step.
+4. A 5-minute video demo of the RAG system and the UI app.
+5. [Bonus] Deploy your demo to a cloud platform for public access to test your demo. 
 
 ## Milestones
 * Feb. 28: Github repo set up. 
-* March 7: PDF upload and indexing via command line done. Include README file and a short video demo to show the usage and completion of your command line tool. 
-* March 30: Answer generation based on user queries via command line finish. Include README file and a short video demo to show the usage and completion of your query tool.
+* March 7: PDF upload and indexing via command line done. Include README file and a short video demo to show the usage and completion of your command line tool. e.g., `python upload.py --pdf_file=example.pdf` to add one PDF file each time. 
+* March 30: Answer generation based on user queries via command line finish. Include README file and a short video demo to show the usage and completion of your query tool. e.g., `python query.py --question="What is the meaning of life?"` to get an answer.
 * April 20: Build a GUI app for all steps above. Include README file and a short video demo to show the usage and completion of your GUI app.
 
 ## Tips
-* For answer generation, use a small language model, like GPT-2. HuggingFace has free GPT-2 inference points. You can use HF_API instead of raw REST requests. 
+* For answer generation, use a small language model, like Llama-2, which can be run on [a local CPU via Llama.cpp](https://github.com/ggerganov/llama.cpp). A Python wrapper [here](https://github.com/abetlen/llama-cpp-python).
+* For embedding, you can use a simple encoder only model, like BERT or sentence-transformer (see this demo from the instructor)
+
+## Tech stack-specific tips
+* PineCone [demo](https://github.com/pinecone-io/examples/blob/master/learn/generation/langchain/handbook/05-langchain-retrieval-augmentation.ipynb) This demo uses GPT3.5 for embedding and text generation. 
+* 
 
 ## References
 * https://python.langchain.com/docs/modules/data_connection/
 * https://cloud.google.com/blog/products/ai-machine-learning/rags-powered-by-google-search-technology-part-1
 * https://www.anyscale.com/blog/fine-tuning-is-for-form-not-facts 
+* https://www.pinecone.io/learn/retrieval-augmented-generation/
 * The instructor's demo of semantic search: https://github.com/forrestbao/pebble/blob/master/NLP/semantic_search.ipynb
+* https://www.glean.com/blog/retrieval-augmented-generation-rag-the-key-to-enabling-generative-ai-for-the-enterprise
