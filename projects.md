@@ -26,16 +26,18 @@ You will be randomly assigned to pick one RAG solution and one UI solution to bu
 6. Rerank (optional): Rerank the top-k documents based on the similarity between the query and the document, resulting in top-p documents where p < k
 7. Generate: Generate an answer based on the top-p documents.
 
-## RAG solutions to pick from (to be expanded)
-* Pinecone + one language model (e.g., GPT-3.5) Do not use LangChain nor LlamaIndex. Build from scratch.
-* LangChain
-* LlamaIndex
-
-## App UI systems to pick from
-* Streamlit
-* Gradio
-* Dash
-* Funix.io
+## Tech stack: 
+* Pipeline
+    * LangChain
+    * LlamaIndex
+    * Bonus: If you do it from scratch without using any RAG framework. 
+* VectorDB 
+    * PineCone
+    * Weaviate
+* UI 
+    * Streamlit
+    * Gradio
+    * Funix.io
 
 ## Key challenges
 1. How to chunk the text? Please experiment with different chunk sizes for the optimal solution. For example, 100-word chunks, 200-word chunks, etc. Be sure to overlap two consecutive chunks by 25% to avoid missing information.
@@ -43,16 +45,16 @@ You will be randomly assigned to pick one RAG solution and one UI solution to bu
 
 ## How to submit
 1. An open-source GitHub repo with the RAG and UI solutions integrated. 
-2. The Github repo shall include a README file with instructions on how to run the demo.
+2. The Github repo shall include a README file with instructions on how to run the demo. It shall also include a `requirements.txt` file to install the dependencies.
 3. Instructions and video clips to show the usage and completion of each step.
 4. A 5-minute video demo of the RAG system and the UI app.
 5. [Bonus] Deploy your demo to a cloud platform for public access to test your demo. 
 
 ## Milestones
-* Feb. 28: Github repo set up. 
-* March 7: PDF upload and indexing via command line done. Include README file and a short video demo to show the usage and completion of your command line tool. e.g., `python upload.py --pdf_file=example.pdf` to add one PDF file each time. 
-* March 30: Answer generation based on user queries via command line finish. Include README file and a short video demo to show the usage and completion of your query tool. e.g., `python query.py --question="What is the meaning of life?"` to get an answer.
-* April 20: Build a GUI app for all steps above. Include README file and a short video demo to show the usage and completion of your GUI app.
+* March 1: Github repo set up. 
+* March 20: PDF upload and indexing via command line done. Include README file and a short video demo to show the usage and completion of your command line tool. e.g., `python upload.py --pdf_file=example.pdf` to add one PDF file each time. 
+* April 10: Answer generation based on user queries via command line finish. Include README file and a short video demo to show the usage and completion of your query tool. e.g., `python query.py --question="What is the meaning of life?"` to get an answer.
+* April 30: Build a GUI app for all steps above. Include README file and a short video demo to show the usage and completion of your GUI app.
 
 ## Tips
 * For answer generation, use a small language model, like Llama-2, which can be run on [a local CPU via Llama.cpp](https://github.com/ggerganov/llama.cpp). A Python wrapper [here](https://github.com/abetlen/llama-cpp-python).
@@ -60,7 +62,6 @@ You will be randomly assigned to pick one RAG solution and one UI solution to bu
 
 ## Tech stack-specific tips
 * PineCone [demo](https://github.com/pinecone-io/examples/blob/master/learn/generation/langchain/handbook/05-langchain-retrieval-augmentation.ipynb) This demo uses GPT3.5 for embedding and text generation. 
-* 
 
 ## References
 * https://python.langchain.com/docs/modules/data_connection/
