@@ -56,9 +56,6 @@ are cited in the Markdown source code in the syntax:
 |There is a **bank** in the student union.| bank - teller  $\approx$ church - paster | 
 |The view is nice along the **bank**, lots of boats and nice resturants.| bank - river $\approx$ platform - railroad | 
 
-
-
-
 <!-- - Intuition: the meaning of a word is determined not only by itself but also the context.  -->
 
 # Contextual embedding via the attention mechanism
@@ -194,6 +191,9 @@ See Figures 3 to 5 at the end of "Attention is all you need".
 ::::
 ::: -->
 
+# Further reading 
+* A very good visual by 3Blue1Brown https://www.youtube.com/watch?v=eMlx5fFNoYc&t=1s 
+
 # Attention for Question Answering (QA) / Machine Reading Comprehension (MRC)
 ![Multi-hop QA, Src: End-To-End Memory Networks, Sainbayar Sukhbaatar, Arthur Szlam, Jason Weston and Rob Fergus, NIPS 2015](./QA.png){width=500px}
 
@@ -235,13 +235,20 @@ See Figures 3 to 5 at the end of "Attention is all you need".
 ::::
 :::
 
+# Encoder and decoder in Transformers
+![Illustration of token-level encoder and decoder](https://www.tensorflow.org/images/tutorials/transformer/RNN+attention-words.png)
+Also other figures: https://www.tensorflow.org/text/tutorials/transformer
+
 # Further reading
-- [Code for NMT with attention, officla TF tutorial](https://www.tensorflow.org/text/tutorials/nmt_with_attention)
-- [Code implementation of Transformer, official TF tutorial](https://www.tensorflow.org/text/tutorials/transformer)
-- [A different implementation of Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
-- [Attention in NLP, Kate Loginova's blog post](https://medium.com/@edloginova/attention-in-nlp-734c6fa9d983)
-- [Attention in Natural Language Processing](https://arxiv.org/pdf/1902.02181.pdf), Galassi et al., IEEE Trans. on Neural Networks and Learning Systems, vol. 32, No. 10, October, 2021
-- If you feel the dimensions in Transformer architecture confuses you, you can read this blog https://towardsdatascience.com/transformers-explained-visually-part-3-multi-head-attention-deep-dive-1c1ff1024853
+* Code examples to build Transformers from scratch 
+  - [The Annotated Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
+  - [Code implementation of Transformer, official TF tutorial](https://www.tensorflow.org/text/tutorials/transformer)
+
+* Other materials 
+  - [Code for NMT with attention, officla TF tutorial](https://www.tensorflow.org/text/tutorials/nmt_with_attention)
+  - [Attention in NLP, Kate Loginova's blog post](https://medium.com/@edloginova/attention-in-nlp-734c6fa9d983)
+  - [Attention in Natural Language Processing](https://arxiv.org/pdf/1902.02181.pdf), Galassi et al., IEEE Trans. on Neural Networks and Learning Systems, vol. 32, No. 10, October, 2021
+  - If you feel the dimensions in Transformer architecture confuses you, you can read this blog https://towardsdatascience.com/transformers-explained-visually-part-3-multi-head-attention-deep-dive-1c1ff1024853
 
 # Sentence Embedding
 - The context vector provides an embedding to the context. If we treat all words in a sentence as a whole, then its context embedding is the embedding to the sentence, i.e., a distributed representation of the semantics of the sentence. 
@@ -315,8 +322,7 @@ has a simple scalar output. For them, BERT is trained to rely on the output of t
 
 # More on the input for BERT II
 The embedding of each token is the sum of its context-independent embedding (e.g., GloVe), its position encoding (discussed in Transformer), and its type/segment encoding. 
-![Src: TF tutorial, Google](https://www.tensorflow.org/text/tutorials/fine_tune_bert_files/output_8L__-erBwLIQ_0.png){height=700px}
-
+![Src: TF tutorial, Google](https://www.tensorflow.org/static/tfmodels/nlp/fine_tune_bert_files/output_8L__-erBwLIQ_0.png){height=700px}
 
 # Battle of the Transformers
 - BERT vs ELMo vs GPT: Fig. 3 in BERT paper. 
@@ -324,7 +330,9 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 - ![Src: Pre-Trained Models: Past, Present and Future, AI Open, 2021](https://ars.els-cdn.com/content/image/1-s2.0-S2666651021000231-gr8_lrg.jpg){width=400px}
 
 # Discriminative (e.g., BERT) vs Generative (e.g., GPT)
-![Src: Pre-Trained Models: Past, Present and Future, AI Open, 2021](https://ars.els-cdn.com/content/image/1-s2.0-S2666651021000231-gr6_lrg.jpg) 
+* masked language model MLM: BERT-style (no decoder)
+* causal language model CLM: GPT-style (requires decoder, encoder is optional)
+
 
 # RoBERTa(**R**obustly **o**ptimized BERT **a**pproach, Facebook AI Research, 2019)
 - Same model but different training strategies 
@@ -340,6 +348,13 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 - [T5, Google, 2020](https://ai.googleblog.com/2020/02/exploring-transfer-learning-with-t5.html)
 - [A good review by Tsinghua NLP group](https://www.sciencedirect.com/science/article/pii/S2666651021000231)
 
+# The GPTs
+* [GPT, Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
+* [GPT-2](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
+* [GPT-3, Language Models are Few-Shot Learners](https://arxiv.org/pdf/2005.14165.pdf)
+* [InstructGPT and RLHF, Training language models to follow instructions with human feedback](https://arxiv.org/pdf/2203.02155.pdf)
+* [ChatGPT, GPT-3.5](https://openai.com/blog/chatgpt)
+
 # Further reading on the Attention of BERT
 - [Revealing the Dark Secrets of BERT, Olga Kovaleva, Alexey Romanov, Anna Rogers, Anna Rumshisky, EMNLP 2019](https://aclanthology.org/D19-1445.pdf)
 - [What does BERT look at? An Analysis of BERT’s Attention, Kevin Clark, Urvashi Khandelwal, Omer Levy, Christopher D. Manning, BlackBoxNLP 2019](https://aclanthology.org/W19-4828.pdf)
@@ -351,4 +366,31 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 - https://www.tensorflow.org/text/guide/bert_preprocessing_guide
 
 
-# Large Language Models (LLMs) or Pretrained Language Models (PTMs)
+# Efficient attentions 
+* Reducing the amount of data: 
+  * Multiquery attention (MQA) https://arxiv.org/pdf/1911.02150.pdf
+  * Grouped Query attention (GQA) https://arxiv.org/pdf/2305.13245.pdf Figure 2 
+* Making attention computation more efficient:
+  * Flash Attention: https://huggingface.co/docs/text-generation-inference/en/conceptual/flash_attention
+  * PagedAttention: https://huggingface.co/docs/text-generation-inference/en/conceptual/paged_attention
+
+# Efficient positional encoding
+* Longformer, BigBird, T5, etc.
+* Rotary position encoding https://arxiv.org/pdf/2104.09864.pdf
+
+
+# Parameter-efficient fine-tuning (PEFT) 
+* BERT opened the era of finetuning. 
+* But models are often big. Full-FT is too slow. 
+* Adapters, including LoRA https://huggingface.co/docs/peft/en/conceptual_guides/adapter
+* Soft-prompting https://huggingface.co/docs/peft/en/conceptual_guides/prompting
+* A lot of the weights are actually unnecessary.
+
+# Accelerated training 
+* Gradient accumulation 
+* Mixed precision training
+* Quantization 
+* Gradient checkpointing
+* Distributed training
+
+https://huggingface.co/docs/transformers/v4.18.0/en/performance
