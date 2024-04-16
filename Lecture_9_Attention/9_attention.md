@@ -348,23 +348,20 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 - [T5, Google, 2020](https://ai.googleblog.com/2020/02/exploring-transfer-learning-with-t5.html)
 - [A good review by Tsinghua NLP group](https://www.sciencedirect.com/science/article/pii/S2666651021000231)
 
+# Further reading on the Attention of BERT
+- [Revealing the Dark Secrets of BERT, Olga Kovaleva, Alexey Romanov, Anna Rogers, Anna Rumshisky, EMNLP 2019](https://aclanthology.org/D19-1445.pdf)
+- [What does BERT look at? An Analysis of BERT’s Attention, Kevin Clark, Urvashi Khandelwal, Omer Levy, Christopher D. Manning, BlackBoxNLP 2019](https://aclanthology.org/W19-4828.pdf)
+- [Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned, Elena Voita, David Talbot, Fedor Moiseev, Rico Sennrich, Ivan Titov, ACL 2019](https://aclanthology.org/P19-1580.pdf)
+- https://jalammar.github.io/a-visual-guide-to-using-bert-for-the-first-time/
+- https://www.tensorflow.org/text/tutorials/fine_tune_bert
+- https://www.tensorflow.org/text/guide/bert_preprocessing_guide
+
 # The GPTs
 * [GPT, Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
 * [GPT-2](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
 * [GPT-3, Language Models are Few-Shot Learners](https://arxiv.org/pdf/2005.14165.pdf)
 * [InstructGPT and RLHF, Training language models to follow instructions with human feedback](https://arxiv.org/pdf/2203.02155.pdf)
 * [ChatGPT, GPT-3.5](https://openai.com/blog/chatgpt)
-
-# Further reading on the Attention of BERT
-- [Revealing the Dark Secrets of BERT, Olga Kovaleva, Alexey Romanov, Anna Rogers, Anna Rumshisky, EMNLP 2019](https://aclanthology.org/D19-1445.pdf)
-- [What does BERT look at? An Analysis of BERT’s Attention, Kevin Clark, Urvashi Khandelwal, Omer Levy, Christopher D. Manning, BlackBoxNLP 2019](https://aclanthology.org/W19-4828.pdf)
-- [Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned, Elena Voita, David Talbot, Fedor Moiseev, Rico Sennrich, Ivan Titov, ACL 2019](https://aclanthology.org/P19-1580.pdf)
-
-# Some good tutorials on BERT and others
-- https://jalammar.github.io/a-visual-guide-to-using-bert-for-the-first-time/
-- https://www.tensorflow.org/text/tutorials/fine_tune_bert
-- https://www.tensorflow.org/text/guide/bert_preprocessing_guide
-
 
 # Efficient attentions 
 * Reducing the amount of data: 
@@ -378,7 +375,6 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 * Longformer, BigBird, T5, etc.
 * Rotary position encoding https://arxiv.org/pdf/2104.09864.pdf
 
-
 # Parameter-efficient fine-tuning (PEFT) 
 * BERT opened the era of finetuning. 
 * But models are often big. Full-FT is too slow. 
@@ -388,9 +384,14 @@ The embedding of each token is the sum of its context-independent embedding (e.g
 
 # Accelerated training 
 * Gradient accumulation 
+* Gradient checkpointing
 * Mixed precision training
 * Quantization 
-* Gradient checkpointing
 * Distributed training
 
-https://huggingface.co/docs/transformers/v4.18.0/en/performance
+Reference: 
+* [Automatic gradient accumulation, with a good illustration of gradient accumulation](https://www.databricks.com/blog/farewell-oom)
+* [Gradient checkpoint illustrated](https://github.com/rasbt/deeplearning-models/blob/master/pytorch_ipynb/mechanics/gradient-checkpointing-nin.ipynb)
+* [HF tutorial: How To Fit a Bigger Model and Train It Faster](https://huggingface.co/docs/transformers/v4.18.0/en/performance)
+* [HF's accelerate library](https://huggingface.co/docs/accelerate/en/index)
+* [Benchmarking different precisions](https://github.com/huggingface/transformers/issues/14608)
